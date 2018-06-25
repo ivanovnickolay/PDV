@@ -1,0 +1,219 @@
+App\Entity\ReestrbranchIn:
+    type: entity
+    table: ReestrBranch_in
+    repositoryClass: App\Entity\Repository\ReestrBranch_in
+    indexes:
+        key:
+            columns:
+                - key_field
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        month:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                comment: 'отчетный месяц  реестра '
+                default: '0'
+        year:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                comment: 'отчетный год  реестра '
+                default: '0'
+        numBranch:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+                comment: 'номер филиала '
+            column: num_branch
+        dateGetInvoice:
+            type: date
+            nullable: true
+            options:
+                comment: 'дата получения НН'
+            column: date_get_invoice
+        dateCreateInvoice:
+            type: date
+            nullable: true
+            options:
+                comment: 'дата создания НН'
+            column: date_create_invoice
+        numInvoice:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+                comment: 'номер НН'
+            column: num_invoice
+        typeInvoiceFull:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+                comment: 'ПНЕ или РКЕ '
+            column: type_invoice_full
+        nameClient:
+            type: string
+            nullable: true
+            length: 500
+            options:
+                fixed: false
+                comment: 'наименование клиента'
+            column: name_client
+        innClient:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+                comment: 'ИНН клиента '
+            column: inn_client
+        zagSumm:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'общая сумма с ПДВ (столб 8)'
+            column: zag_summ
+        baza20:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'стоимость без ПДВ (столб 10)'
+            column: baza_20
+        pdv20:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'пдв по ставке 20 % (столб 11)'
+            column: pdv_20
+        baza7:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'стоимость без ПДВ (столб 12)'
+            column: baza_7
+        pdv7:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'пдв по ставке 7 % (столб 13)'
+            column: pdv_7
+        baza0:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'стоимость без ПДВ (столб 14)'
+            column: baza_0
+        pdv0:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'пдв по ставке 0 % (столб 15) '
+            column: pdv_0
+        bazaZvil:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'стоимость без ПДВ (столб 16)'
+            column: baza_zvil
+        pdvZvil:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'ПДВ  (столб 17) '
+            column: pdv_zvil
+        bazaNeGos:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'стоимость не предназначених в хоз деятельности (столб 18)'
+            column: baza_ne_gos
+        pdvNeGos:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'ПДВ не предназначених в хоз деятельности (столб 19)'
+            column: pdv_ne_gos
+        bazaZaMezhi:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'стоимость без ПДВ поставка услуг за пределы Украины (столб 20)'
+            column: baza_za_mezhi
+        pdvZaMezhi:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+            options:
+                comment: 'стоимость с ПДВ поставка услуг за пределы Украины (столб 21)'
+            column: pdv_za_mezhi
+        rkeDateCreateInvoice:
+            type: date
+            nullable: true
+            options:
+                comment: 'дата сознание НН которую корректирует РКЕ'
+            column: rke_date_create_invoice
+        rkeNumInvoice:
+            type: string
+            nullable: true
+            length: 50
+            options:
+                fixed: false
+                comment: 'номер НН которую корректирует РКЕ'
+            column: rke_num_invoice
+        rkePidstava:
+            type: string
+            nullable: true
+            length: 250
+            options:
+                fixed: false
+                comment: 'основание для выписки РКЕ '
+            column: rke_pidstava
+        keyField:
+            type: string
+            nullable: true
+            length: 250
+            options:
+                fixed: false
+                comment: 'ключевое поле '
+            column: key_field
+    lifecycleCallbacks: {  }

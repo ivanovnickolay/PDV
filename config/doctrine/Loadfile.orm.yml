@@ -1,0 +1,57 @@
+App\Entity\Loadfile:
+    type: entity
+    table: LoadFile
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        originalName:
+            type: string
+            nullable: false
+            length: 50
+            options:
+                fixed: false
+            column: original_name
+        uploadName:
+            type: string
+            nullable: false
+            length: 50
+            options:
+                fixed: false
+            column: upload_name
+        typeFile:
+            type: string
+            nullable: false
+            length: 3
+            options:
+                fixed: false
+            column: type_file
+        descriptionFile:
+            type: string
+            nullable: false
+            length: 50
+            options:
+                fixed: false
+            column: description_file
+        typeDoc:
+            type: string
+            nullable: false
+            length: 50
+            options:
+                fixed: false
+            column: type_doc
+        uploadDate:
+            type: datetime
+            nullable: false
+            column: upload_date
+        processingDate:
+            type: datetime
+            nullable: false
+            column: processing_date
+    lifecycleCallbacks: {  }

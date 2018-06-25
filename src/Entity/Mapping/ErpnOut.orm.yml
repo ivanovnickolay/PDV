@@ -1,0 +1,175 @@
+App\Entity\ErpnOut:
+    type: entity
+    table: Erpn_out
+    repositoryClass: App\Entity\Repository\ErpnOutRepository
+    indexes:
+        inn:
+            columns:
+                - inn_client
+        key:
+            columns:
+                - key_field
+    uniqueConstraints:
+        Key_fields:
+            columns:
+                - num_invoice
+                - date_create_invoice
+                - type_invoice_full
+                - inn_client
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        numInvoice:
+            type: string
+            nullable: false
+            length: 20
+            options:
+                fixed: false
+            column: num_invoice
+        dateCreateInvoice:
+            type: date
+            nullable: false
+            column: date_create_invoice
+        dateRegInvoice:
+            type: date
+            nullable: false
+            column: date_reg_invoice
+        typeInvoiceFull:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: type_invoice_full
+        edrpouClient:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: edrpou_client
+        innClient:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: inn_client
+        numBranchClient:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: num_branch_client
+        nameClient:
+            type: string
+            nullable: false
+            length: 500
+            options:
+                fixed: false
+            column: name_client
+        sumaInvoice:
+            type: float
+            nullable: false
+            precision: 15
+            scale: 2
+            column: suma_invoice
+        pdvinvoice:
+            type: float
+            nullable: true
+            precision: 15
+            scale: 2
+        bazaInvoice:
+            type: float
+            nullable: false
+            precision: 15
+            scale: 2
+            column: baza_invoice
+        nameVendor:
+            type: string
+            nullable: false
+            length: 500
+            options:
+                fixed: false
+            column: name_vendor
+        numBranchVendor:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: num_branch_vendor
+        numRegInvoice:
+            type: string
+            nullable: false
+            length: 12
+            options:
+                fixed: false
+            column: num_reg_invoice
+        typeInvoice:
+            type: string
+            nullable: true
+            length: 2
+            options:
+                fixed: false
+            column: type_invoice
+        numContract:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: num_contract
+        dateContract:
+            type: date
+            nullable: true
+            column: date_contract
+        typeContract:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: type_contract
+        personCreateInvoice:
+            type: string
+            nullable: true
+            length: 40
+            options:
+                fixed: false
+            column: person_create_invoice
+        keyField:
+            type: string
+            nullable: true
+            length: 50
+            options:
+                fixed: false
+            column: key_field
+        rkeInfo:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: rke_info
+        monthCreateInvoice:
+            type: integer
+            nullable: true
+            column: month_create_invoice
+        yearCreateInvoice:
+            type: integer
+            nullable: true
+            column: year_create_invoice
+        numMainBranch:
+            type: string
+            length: 255
+            column:  num_main_branch
+    lifecycleCallbacks: {  }

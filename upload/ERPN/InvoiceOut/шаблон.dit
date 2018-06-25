@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Devart (www.devart.com), import template file-->
+<!-- Modifying this generated file will probably render it invalid -->
+<ImportTemplate FormatVersion="4">
+  <Format>Csv</Format>
+  <FileSupport>True</FileSupport>
+  <PasswordSupport>False</PasswordSupport>
+  <TargetInfo>
+    <PropertyValue Name="ConnectionName" xml:space="preserve">AnalizPDV.localhost</PropertyValue>
+    <PropertyValue Name="ConnectionString" xml:space="preserve">User Id=root;Host=localhost;Database=AnalizPDV;Character Set=utf8</PropertyValue>
+    <PropertyValue Name="TargetTable" xml:space="preserve">AnalizPDV.erpn_out</PropertyValue>
+  </TargetInfo>
+  <Options>
+    <PropertyValue Name="FileName" xml:space="preserve">D:\OpenServer525\domains\AnalizPDV\web\Doc\InvoiceOut\template_CSV_Out(12-2015_02-2017).csv</PropertyValue>
+    <PropertyValue Name="Encoding" xml:space="preserve">1251</PropertyValue>
+    <PropertyValue Name="ColumnSplittingType">0</PropertyValue>
+    <PropertyValue Name="Delimiter" xml:space="preserve">;</PropertyValue>
+    <PropertyValue Name="ColumnWidth" xml:space="preserve">50</PropertyValue>
+    <PropertyValue Name="QuoteChar" xml:space="preserve">"</PropertyValue>
+    <PropertyValue Name="SkipLinesCount" xml:space="preserve">1</PropertyValue>
+    <PropertyValue Name="ImportEvenLinesOnly">false</PropertyValue>
+    <PropertyValue Name="HeaderPosition" xml:space="preserve">1</PropertyValue>
+    <PropertyValue Name="DateTimeFormat" xml:space="preserve" />
+    <PropertyValue Name="Boolean" xml:space="preserve">true;false</PropertyValue>
+    <PropertyValue Name="DecimalSeparator" xml:space="preserve">,</PropertyValue>
+    <PropertyValue Name="NullValue" xml:space="preserve">null</PropertyValue>
+    <PropertyValue Name="ThousandSeparator" xml:space="preserve"> </PropertyValue>
+    <PropertyValue Name="WriteLog">true</PropertyValue>
+    <PropertyValue Name="LogFileName" xml:space="preserve">D:\OpenServer525\domains\AnalizPDV\web\Doc\InvoiceOut\DataImport.log</PropertyValue>
+    <PropertyValue Name="UseBulkInsert">true</PropertyValue>
+    <PropertyValue Name="MaxBatchSize" xml:space="preserve">1048576</PropertyValue>
+    <PropertyValue Name="ErrorHandlingMode">0</PropertyValue>
+    <PropertyValue Name="ExecuteAsSingleTransaction">false</PropertyValue>
+    <PropertyValue Name="TrackAffectedRecords">false</PropertyValue>
+  </Options>
+  <ImportMode>Insert</ImportMode>
+  <ColumnMappings>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>20</SourceColumnIndex>
+      <TargetColumnName>key_field</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue>null</NullValue>
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>20</SourceColumnIndex>
+      <TargetColumnName>rke_info</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue>null</NullValue>
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>0</SourceColumnIndex>
+      <TargetColumnName>num_invoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>1</SourceColumnIndex>
+      <TargetColumnName>date_create_invoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>2</SourceColumnIndex>
+      <TargetColumnName>date_reg_invoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>3</SourceColumnIndex>
+      <TargetColumnName>type_invoice_full</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>4</SourceColumnIndex>
+      <TargetColumnName>edrpou_client</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>5</SourceColumnIndex>
+      <TargetColumnName>inn_client</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>6</SourceColumnIndex>
+      <TargetColumnName>num_branch_client</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>7</SourceColumnIndex>
+      <TargetColumnName>name_client</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>8</SourceColumnIndex>
+      <TargetColumnName>suma_invoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>9</SourceColumnIndex>
+      <TargetColumnName>pdvinvoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>10</SourceColumnIndex>
+      <TargetColumnName>baza_invoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>11</SourceColumnIndex>
+      <TargetColumnName>name_vendor</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>12</SourceColumnIndex>
+      <TargetColumnName>num_branch_vendor</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>13</SourceColumnIndex>
+      <TargetColumnName>num_reg_invoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>14</SourceColumnIndex>
+      <TargetColumnName>type_invoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>15</SourceColumnIndex>
+      <TargetColumnName>num_contract</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>16</SourceColumnIndex>
+      <TargetColumnName>date_contract</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>17</SourceColumnIndex>
+      <TargetColumnName>type_contract</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+    <ColumnMappingItem>
+      <TargetColumnIndex>-1</TargetColumnIndex>
+      <SourceColumnIndex>18</SourceColumnIndex>
+      <TargetColumnName>person_create_invoice</TargetColumnName>
+      <IsKey>false</IsKey>
+      <NullValue />
+      <DefaultValue />
+      <LeftQuoteString />
+      <RightQuoteString />
+      <DateTimeFormat />
+    </ColumnMappingItem>
+  </ColumnMappings>
+</ImportTemplate>

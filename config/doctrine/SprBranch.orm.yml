@@ -1,0 +1,50 @@
+App\Entity\SprBranch:
+    type: entity
+    table: SprBranch
+    repositoryClass: App\Entity\Repository\SprBranchRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        numBranch:
+            type: string
+            nullable: false
+            length: 3
+            options:
+                fixed: false
+            column: num_branch
+        nameBranch:
+            type: string
+            nullable: false
+            length: 150
+            options:
+                fixed: false
+            column: name_branch
+        branchAdr:
+            type: string
+            nullable: false
+            length: 150
+            options:
+                fixed: false
+            column: branch_adr
+        nameMainBranch:
+            type: string
+            nullable: false
+            length: 100
+            options:
+                fixed: false
+            column: name_main_branch
+        numMainBranch:
+            type: string
+            nullable: false
+            length: 3
+            options:
+                fixed: false
+            column: num_main_branch
+    lifecycleCallbacks: {  }

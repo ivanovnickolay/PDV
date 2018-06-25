@@ -1,0 +1,1 @@
+﻿SELECT COUNT(eo.id) FROM erpn_out eo WHERE eo.month_create_invoice=9 OR eo.month_create_invoice=10

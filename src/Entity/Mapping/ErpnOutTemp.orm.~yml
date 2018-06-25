@@ -1,0 +1,141 @@
+AnalizPdvBundle\Entity\ErpnOutTemp:
+    type: entity
+    table: Erpn_out_temp
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        numInvoice:
+            type: string
+            nullable: false
+            length: 20
+            options:
+                fixed: false
+            column: num_invoice
+        dateCreateInvoice:
+            type: date
+            nullable: false
+            column: date_create_invoice
+        dateRegInvoice:
+            type: date
+            nullable: false
+            column: date_reg_invoice
+        typeInvoiceFull:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: type_invoice_full
+        edrpouClient:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: edrpou_client
+        innClient:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: inn_client
+        numBranchClient:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: num_branch_client
+        nameClient:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: name_client
+        sumaInvoice:
+            type: decimal
+            nullable: false
+            precision: 10
+            scale: 2
+            column: suma_invoice
+        pdvinvoice:
+            type: decimal
+            nullable: true
+            precision: 10
+            scale: 2
+        bazaInvoice:
+            type: decimal
+            nullable: false
+            precision: 10
+            scale: 2
+            column: baza_invoice
+        nameVendor:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+            column: name_vendor
+        numBranchVendor:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+            column: num_branch_vendor
+        numRegInvoice:
+            type: string
+            nullable: false
+            length: 12
+            options:
+                fixed: false
+            column: num_reg_invoice
+        typeInvoice:
+            type: string
+            nullable: true
+            length: 2
+            options:
+                fixed: false
+            column: type_invoice
+        numContract:
+            type: string
+            nullable: true
+            length: 15
+            options:
+                fixed: false
+            column: num_contract
+        dateContract:
+            type: date
+            nullable: true
+            column: date_contract
+        typeContract:
+            type: string
+            nullable: true
+            length: 100
+            options:
+                fixed: false
+            column: type_contract
+        personCreateInvoice:
+            type: string
+            nullable: true
+            length: 40
+            options:
+                fixed: false
+            column: person_create_invoice
+        keyField:
+            type: string
+            nullable: true
+            length: 50
+            options:
+                fixed: false
+            column: key_field
+    lifecycleCallbacks: {  }
