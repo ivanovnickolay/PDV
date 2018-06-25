@@ -1,0 +1,7 @@
+class downloadFromFile ->
+    $this->load = new loadRowsFromFile($this->fileName) ->
+        $this->load->loadDataFromFile(){
+            $loader=new loadRows($this->fileName, $this->configLoad);
+                $loader->readRows($this->handlerRows);
+        }
+
