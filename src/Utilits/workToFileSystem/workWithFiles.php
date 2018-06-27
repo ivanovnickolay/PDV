@@ -97,7 +97,9 @@ class workWithFiles
      * @param array $arrayError массив данных, которые генерирует handlerRowsValid::getResultHandlingAllRows
      * @throws \Exception Директория для сохранения файла не найдена
      */
-	public static function createFileErrorValidation(string $dirSaveFile,string $nameFile, array $arrayError){
+	public static function createFileErrorValidation(string $dirSaveFile,
+                                                     string $nameFile,
+                                                     array $arrayError){
 	    if(!is_dir($dirSaveFile) or(!is_writable($dirSaveFile))){
 	        throw new \Exception("Директория для сохранения файла не найдена");
         }
@@ -110,7 +112,10 @@ class workWithFiles
                 file_put_contents($fileNameWithDir, $stringForSave, FILE_APPEND);
             }
         }
+    }
 
-
+    public static function getExtensionFileName(string $fileName){
+        $pathinfo = pathinfo($fileName);
+        return $pathinfo['extension'];
     }
 }

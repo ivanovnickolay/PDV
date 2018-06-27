@@ -12,6 +12,7 @@ use App\Utilits\loadDataExcel\createReaderFile\getReaderExcel;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 use Box\Spout\Common\Type;
 use Box\Spout\Reader\ReaderFactory;
+use App\Utilits\workToFileSystem\workWithFiles;
 
 /**
  * Class getReader фабрика создания класса ридера в зависимости от расширения файла
@@ -33,7 +34,7 @@ class getReaderFactory
      */
     public static function createReader(string $fileName, configLoader_interface $config=null){
         $validFileType=array("xls","xlsx");
-            $extensionFile= static::getExtensionFileName($fileName);
+            $extensionFile= workWithFiles::getExtensionFileName($fileName);
                if (!in_array($extensionFile,$validFileType)) {
                 throw new errorLoadDataException("Расширение файла не поддерживается!");
                 }
@@ -53,11 +54,6 @@ class getReaderFactory
         return $reader;
     }
 
-    private static function getExtensionFileName(string $fileName){
-        $pathinfo = pathinfo($fileName);
-            return $pathinfo['extension'];
-    }
-
     /**
      * Создаем и делаем первичную настройку объект для чтения файлов с расширением Xls
      * @param string $fileName
@@ -67,6 +63,7 @@ class getReaderFactory
     private static function getReaderXls(string $fileName){
         $obj = new getReaderExcel($fileName, static::$config->getMaxReadRow());
             $obj->createFilter(static::$config->getLastColumn());
+                $obj->getReader();
                return $obj;
     }
 

@@ -37,7 +37,7 @@ class downloadFromFile
      */
     private $config;
     /**
-     * @var loadRowsFromFile
+     * @var readRowsFromFile
      */
     private $load;
 
@@ -75,7 +75,7 @@ class downloadFromFile
         $this->fileName  = $fileName;
                try {
                    $this->config = configLoaderFactory::getConfigLoad($this->fileName);
-                        $this->load = new loadRowsFromFile($this->fileName);
+                        $this->load = new readRowsFromFile($this->fileName);
                }catch (errorLoadDataException $exception){
                    throw new errorLoadDataException($exception->getMessage(). " File name ". $this->fileName);
                }

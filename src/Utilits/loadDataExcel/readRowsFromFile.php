@@ -28,6 +28,7 @@ namespace App\Utilits\loadDataExcel;
 use App\Utilits\loadDataExcel\configLoader\configLoader_interface;
 use App\Utilits\loadDataExcel\configLoader\configLoaderFactory;
 use App\Utilits\loadDataExcel\handlerRow\handlerRowAbstract;
+use App\Utilits\loadDataExcel\loadData\getReadDataFromRowsFactory;
 use App\Utilits\loadDataExcel\loadData\loadRows;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 
@@ -40,7 +41,7 @@ use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
  * @package AnalizPdvBundle\Utilits\loadDataFromExcel
  * // todo Test !!!
  */
-class loadRowsFromFile
+class readRowsFromFile
 {
 	/**
 	 * Шаблон название классов с конфигурациями загрузки
@@ -146,7 +147,9 @@ class loadRowsFromFile
             throw new errorLoadDataException("Ошибка при поиске обработчика строк с данными . Не загружен обрабочик строк  ");
         }
 		// создаем загрузчик с нужной конфигурацией
-		$loader=new loadRows($this->fileName, $this->configLoad);
+		//$loader=new loadRows($this->fileName, $this->configLoad);
+        // замена на класс фабрики
+        $loader = getReadDataFromRowsFactory::create($this->fileName, $this->configLoad);
             // загружаем данные из файла
             $loader->readRows($this->handlerRows);
 		// очищаем не используемое

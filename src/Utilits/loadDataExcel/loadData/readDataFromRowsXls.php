@@ -14,6 +14,7 @@ use App\Utilits\loadDataExcel\loadData\readDataFromRowsAbstract;
 
 /**
  * Class readDataFromRowsXls Реализует чтение данных из строк файлов с расширенеим "*.Xls"
+ * ЗАМЕНА класса loadData
  * @package App\Utilits\loadDataExcel\loadData
  */
 class readDataFromRowsXls extends readDataFromRowsAbstract
