@@ -14,6 +14,7 @@ use App\Utilits\loadDataExcel\downloadFromFile;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 use App\Utilits\workToFileSystem\workWithFiles;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * класс предназначен для организации загрузки информации из файлов Excel
@@ -58,7 +59,7 @@ class LoadReestrFromFile
      * @param EntityManager $entityManager
      *
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
             $this->dirForMoveFiles="";

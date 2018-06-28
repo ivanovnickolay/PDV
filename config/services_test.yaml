@@ -1,0 +1,14 @@
+# параметры которые используются в тестовой среде
+parameters:
+#для тестрирования сервиса загрузки информации из файлов - переопределим ссылки на директории
+#для работы сервиса loadDataFromFiles
+# определение '%kernel.project_dir% - путь к корню проекта
+# https://symfony.com/blog/new-in-symfony-3-3-a-simpler-way-to-get-the-project-root-directory
+    # директория из которой загружаются файлы
+    dirForLoadFiles: '%kernel.project_dir%/tests/Services/LoadReestrFromFile/dirForLoadFiles'
+    # директория в которую переносятся загруженные без проблем файлы
+    dirForMoveFiles: '%kernel.project_dir%/tests/Services/LoadReestrFromFile/dirForMoveFiles'
+    # директория в которую переносятся файлы с ошибками валидации
+    dirForMoveFilesWithError: '%kernel.project_dir%/tests/Services/LoadReestrFromFile/dirForMoveFilesWithError'
+    # директория с тестовыми файлами
+    dirFixturesFiles: '%kernel.project_dir%/tests/Services/LoadReestrFromFile/fixturesFiles'

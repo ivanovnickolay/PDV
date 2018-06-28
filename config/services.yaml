@@ -2,6 +2,12 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    # директория из которой загружаются файлы
+    dirForLoadFiles: '%kernel.root_dir%/../upload/ReestrsForLoad/'
+    # директория в которую переносятся загруженные без проблем файлы
+    dirForMoveFiles: '%kernel.root_dir%/../upload/ReestrsForLoad_success/'
+    # директория в которую переносятся файлы с ошибками валидации
+    dirForMoveFilesWithError: '%kernel.root_dir%/../upload/ReestrsForLoad_error/'
 
 services:
     # default configuration for services in *this* file
@@ -26,3 +32,19 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    #services command
+    app.command.load_data_from_files_command:
+            class: App\Command\LoadDataFromFilesCommand
+            arguments: ['@app.services.load_reestr_from_file']
+            tags:
+                - { name: console.command }
+    # services class service
+    app.services.load_reestr_from_file:
+        class: App\Services\LoadReestrFromFile
+        arguments: ['@Doctrine\ORM\EntityManagerInterface']
+        calls:
+            - [setDirForMoveFiles, ['%dirForMoveFiles%']]
+            - [setCache, ['@App\Utilits\loadDataExcel\cacheDataRow\cacheDataRow']]
+            - [setDirForLoadFiles, ['%dirForLoadFiles%']]
+            - [setDirForMoveFilesWithError, ['%dirForMoveFilesWithError%']]
