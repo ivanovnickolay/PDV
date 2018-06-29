@@ -8,6 +8,10 @@ parameters:
     dirForMoveFiles: '%kernel.root_dir%/../upload/ReestrsForLoad_success/'
     # директория в которую переносятся файлы с ошибками валидации
     dirForMoveFilesWithError: '%kernel.root_dir%/../upload/ReestrsForLoad_error/'
+    # директория для загрузки данных в таблицу ЕРПН Полученные (кредит)
+    dirForFilesERPN_In: '%kernel.root_dir%/../upload/ERPN/InvoiceIn/'
+    # директория для загрузки данных в таблицу ЕРПН Выданные (обязательства)
+    dirForFilesERPN_Out: '%kernel.root_dir%/../upload/ERPN/InvoiceOut/'
 
 services:
     # default configuration for services in *this* file
@@ -33,13 +37,15 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    #services command
+#services command
+    # сервис команды для загрузки данных реестров из файлов
     app.command.load_data_from_files_command:
             class: App\Command\LoadDataFromFilesCommand
             arguments: ['@app.services.load_reestr_from_file']
             tags:
                 - { name: console.command }
-    # services class service
+# services class service
+    #  сервис для загрузки данных реестров из файлов
     app.services.load_reestr_from_file:
         class: App\Services\LoadReestrFromFile
         arguments: ['@Doctrine\ORM\EntityManagerInterface']
@@ -48,3 +54,7 @@ services:
             - [setCache, ['@App\Utilits\loadDataExcel\cacheDataRow\cacheDataRow']]
             - [setDirForLoadFiles, ['%dirForLoadFiles%']]
             - [setDirForMoveFilesWithError, ['%dirForMoveFilesWithError%']]
+    #  сервис для загрузки данных ЕРПН из файлов csv
+    services.load_data_in_file_erpn:
+        class: App\Services\loadDataInFile_ERPN
+        arguments: ['@doctrine.orm.default_entity_manager', '%dirForFilesERPN_In%', '%dirForFilesERPN_Out%']

@@ -114,6 +114,11 @@ class workWithFiles
         }
     }
 
+    /**
+     * Возвращает расширение файла
+     * @param string $fileName
+     * @return mixed
+     */
     public static function getExtensionFileName(string $fileName){
         $pathinfo = pathinfo($fileName);
         return $pathinfo['extension'];
