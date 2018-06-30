@@ -55,6 +55,7 @@ services:
             - [setDirForLoadFiles, ['%dirForLoadFiles%']]
             - [setDirForMoveFilesWithError, ['%dirForMoveFilesWithError%']]
     #  сервис для загрузки данных ЕРПН из файлов csv
-    services.load_data_in_file_erpn:
-        class: App\Services\loadDataInFile_ERPN
-        arguments: ['@doctrine.orm.default_entity_manager', '%dirForFilesERPN_In%', '%dirForFilesERPN_Out%']
+    App\Services\loadDataInFile_ERPN:
+        arguments:
+            $dirForFilesERPN_In: '%dirForFilesERPN_In%'
+            $dirForFilesERPN_Out: '%dirForFilesERPN_Out%'

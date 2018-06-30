@@ -12,3 +12,7 @@ parameters:
     dirForMoveFilesWithError: '%kernel.project_dir%/tests/Services/LoadReestrFromFile/dirForMoveFilesWithError'
     # директория с тестовыми файлами
     dirFixturesFiles: '%kernel.project_dir%/tests/Services/LoadReestrFromFile/fixturesFiles'
+    # директория для загрузки данных в таблицу ЕРПН Полученные (кредит)
+    dirForFilesERPN_In: '%kernel.project_dir%/tests/Services/loadDataInFile_ERPN/In/'
+    # директория для загрузки данных в таблицу ЕРПН Выданные (обязательства)
+    dirForFilesERPN_Out: '%kernel.project_dir%/tests/Services/loadDataInFile_ERPN/Out/'

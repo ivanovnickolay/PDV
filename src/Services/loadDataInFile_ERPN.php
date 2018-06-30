@@ -40,11 +40,7 @@ class loadDataInFile_ERPN{
      * @param string $dirForFilesERPN_Out - директория для файлов, данные из которых загружаются в ЕРПН Выданные
      * @throws errorLoadDataException  - при отсутствии директорий
      */
-    public function __construct(
-        EntityManagerInterface $em,
-        string $dirForFilesERPN_In,
-        string $dirForFilesERPN_Out
-    ){
+    public function __construct(EntityManagerInterface $em, string $dirForFilesERPN_In, string $dirForFilesERPN_Out){
         $this->em = $em;
         if (!is_dir($dirForFilesERPN_In)){
             throw new errorLoadDataException("Директория для загрузки данных в таблицу ЕРПН Полученные (кредит) не найдена.");
