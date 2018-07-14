@@ -2,10 +2,11 @@
 
 namespace App\Entity\Repository;
 use App\Entity\forForm\search\allFromPeriod_Branch;
+use App\Entity\forForm\search\docFromParam;
 use App\Entity\forForm\search\getArrayFromSearch_Interface;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 use App\Utilits\workToFileSystem\workWithFiles;
-use Doctrine\DBAL\Driver\PDOStatement;
+
 
 /**
  * ErpnIn
@@ -135,5 +136,45 @@ class ErpnInRepository extends \Doctrine\ORM\EntityRepository
         $smtp ->bindValue("fileName",$fileName);
         $smtp->execute();
         unset($pdoConn,$smtp);
+    }
+
+    /** Поиск данных в таблице на основании параметров переданных в объекте docFromParam
+     * @param docFromParam $param
+     * @return mixed
+     */
+    public function searchDataFromParam(docFromParam $param){
+        $objParam  = $param;
+//        $emConfig = $this->getEntityManager()->getConfiguration();
+//        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+//        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
+        $qr=$this->createQueryBuilder('ErpnIn');
+
+        $qr->where('MONTH(ErpnIn.dateCreateInvoice)=:m');
+        $qr->setParameter('m',$objParam->getMonthCreate());
+
+            $qr->andWhere('YEAR(ErpnIn.dateCreateInvoice)=:y');
+            $qr->setParameter('y', $objParam->getYearCreate());
+
+                $qr->andWhere('ErpnIn.typeInvoiceFull=:t');
+                $qr->setParameter('t', $objParam->getTypeDoc());
+
+                    if ($objParam->getDateCreateDoc()!=null){
+                        $qr->andWhere('ErpnIn.dateCreateInvoice=:d');
+                        $qr->setParameter('d', $objParam->getDateCreateDoc());
+                    }
+
+                    if ($objParam->getINN()!=0){
+                        $qr->andWhere('ErpnIn.innClient=:i');
+                        $qr->setParameter('i', $objParam->getINN());
+                    }
+
+                        if ($objParam->getNumDoc()!=0){
+                            $qr->andWhere('ErpnIn.numInvoice=:ni');
+                            $qr->setParameter('ni', $objParam->getNumDoc());
+                        }
+
+        $result=$qr->getQuery();
+        return $result->getResult();
+
     }
 }
