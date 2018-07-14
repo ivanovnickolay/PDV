@@ -8,7 +8,7 @@
 
 namespace App\Entity\forForm\search;
 use App\Entity\forForm\validationConstraint\ContainsNumDoc;
-use App\Tests\Entity\forForm\docFromParamTest;
+use App\Entity\forForm\docFromParamTest;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -35,7 +35,8 @@ class docFromParam extends searchAbstract
 			parent::__construct();
 			$this->setTypeDoc("ПНЕ");
 			$this->setNumDoc(" ");
-			$this->setINN(" ");
+			// null что бы корректно отображалась форма ввода
+			$this->setINN(null);
 		}
 
 	/**
@@ -136,7 +137,7 @@ class docFromParam extends searchAbstract
 	}
 
 	/**
-	 * @return mixed
+	 * @return integer
 	 */
 	public function getINN()
 	{

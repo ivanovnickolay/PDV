@@ -50,7 +50,7 @@ use App\Tests\Entity\forForm\searchAbstractTest;
 	 * допустимые значение $yearCreate
 	 * @var array
 	 */
-	protected $correctYearCreate=["2015","2016","2017"];
+	protected $correctYearCreate=["2015","2016","2017","2018"];
 	/**
 	 * направление поиска данных
 	 *  -  обязательства (Out)
