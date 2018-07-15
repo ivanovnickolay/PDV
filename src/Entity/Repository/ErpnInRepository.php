@@ -57,7 +57,7 @@ class ErpnInRepository extends \Doctrine\ORM\EntityRepository
 	}
 
 	/**
-	 * @param $arrayFromSearch
+     * @param $arrayFromSearch
 	 * @return array
 	 */
 	public function getSearchAllFromParam($arrayFromSearch)

@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * Class searchErpnTest
  * @package App\Entity\Repository
  */
-class searchErpnTest extends KernelTestCase
+class searchErpnInTest extends KernelTestCase
 {
     /**
      * @var \Doctrine\Common\Persistence\ObjectManager|object

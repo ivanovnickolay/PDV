@@ -2,6 +2,7 @@
 
 namespace App\Entity\Repository;
 
+use App\Entity\forForm\search\docFromParam;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 use App\Utilits\workToFileSystem\workWithFiles;
 
@@ -19,6 +20,7 @@ class ErpnOutRepository extends \Doctrine\ORM\EntityRepository
 	 * если проверка пройдена успешно возвращает true
 	 * @param \App\Entity\ErpnOut|\App\Entity\Erpn_out $Invoice
 	 * @return bool
+     * @deprecated
 	 */
 	public function ValidInvoice(\App\Entity\ErpnOut $Invoice )
 	{
@@ -37,7 +39,6 @@ class ErpnOutRepository extends \Doctrine\ORM\EntityRepository
 		}
 	}
 
-
 	/**
 	 * Возвращеет количество записей по условию
 	 * @param $numInvoice
@@ -45,6 +46,7 @@ class ErpnOutRepository extends \Doctrine\ORM\EntityRepository
 	 * @param $typeInvoice
 	 * @param $INN
 	 * @return mixed
+     * @deprecated
 	 */
 	public function getCountKeyFields($numInvoice, $dateInvoice, $typeInvoice, $INN)
 	{
@@ -63,6 +65,149 @@ class ErpnOutRepository extends \Doctrine\ORM\EntityRepository
 		$count = $qb->getQuery()->getSingleScalarResult();
 
 		return $count;
+	}
+
+	/**
+	 * поиск данных в ЕРПН по условиям из класса getSearchAllFromPeriod_Branch
+	 *
+	 * @uses allFromPeriod_Branch класс поиска
+	 * @uses allFromPeriod_Branch::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
+	 *
+	 *
+	 * @param getArrayFromSearch_Interface $arrayFromSearch
+	 * @return array
+     * @deprecated
+	 */
+	public function getSearchAllFromPeriod_Branch($arrayFromSearch)
+	{
+
+		$qr=$this->createQueryBuilder('ErpnOut');
+		$qr->where('ErpnOut.monthCreateInvoice=:m');
+		$qr->setParameter('m', $arrayFromSearch['monthCreateInvoice']);
+		$qr->andWhere('ErpnOut.yearCreateInvoice=:y');
+		$qr->setParameter('y', $arrayFromSearch['yearCreateInvoice']);
+
+		if(array_key_exists('numBranchVendor', $arrayFromSearch))
+		{
+			$qr->andWhere('ErpnOut.numBranchVendor=:nbv');
+			$qr->setParameter('nbv', $arrayFromSearch['numBranchVendor']);
+		}
+
+		if(array_key_exists('numMainBranch', $arrayFromSearch))
+		{
+			$qr->andWhere('ErpnOut.numMainBranch=:nmb');
+			$qr->setParameter('nmb', $arrayFromSearch['numMainBranch']);
+		}
+
+		$result=$qr->getQuery();
+		return $result->getResult();
+	}
+
+	/**
+	 * поиск данных в ЕРПН по условиям из класса getSearchAllFromPeriod_Branch
+	 *
+	 * @uses allFromPeriod_Branch класс поиска
+	 * @uses allFromPeriod_Branch::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
+	 *
+	 *
+	 * @param getArrayFromSearch_Interface $arrayFromSearch
+	 * @return array
+     * @deprecated
+	 */
+	public function getSearchAllFromParam($arrayFromSearch)
+	{
+
+		$qr=$this->createQueryBuilder('ErpnOut');
+		$qr->where('ErpnOut.monthCreateInvoice=:m');
+		$qr->setParameter('m', $arrayFromSearch['monthCreateInvoice']);
+		$qr->andWhere('ErpnOut.yearCreateInvoice=:y');
+		$qr->setParameter('y', $arrayFromSearch['yearCreateInvoice']);
+		$qr->andWhere('ErpnOut.typeInvoiceFull=:t');
+		$qr->setParameter('t', $arrayFromSearch['typeInvoiceFull']);
+
+
+		if(array_key_exists('innClient', $arrayFromSearch))
+		{
+			$qr->andWhere('ErpnOut.innClient=:inn');
+			$qr->setParameter('inn', $arrayFromSearch['innClient']);
+		}
+
+		if(array_key_exists('numInvoice', $arrayFromSearch))
+		{
+			$qr->andWhere('ErpnOut.numInvoice=:ni');
+			$qr->setParameter('ni', $arrayFromSearch['numInvoice']);
+		}
+
+		if(array_key_exists('dateCreateInvoice', $arrayFromSearch))
+		{
+			$qr->andWhere('ErpnOut.dateCreateInvoice=:dсi');
+			$qr->setParameter('dсi', $arrayFromSearch['dateCreateInvoice']);
+		}
+
+		$result=$qr->getQuery();
+		return $result->getResult();
+	}
+
+	/**
+	 * @param $month
+	 * @param $year
+	 * @param $numBranch
+	 * @param $inn
+	 * @return array
+     * @deprecated
+     */
+	public function getAnalizData(int $month, int $year, string $numBranch, string $inn)
+	{
+		$SQL="Select num_invoice, 
+					date_format(date_create_invoice,'%d.%m.%Y'),
+					type_invoice_full,
+					inn_client,
+					 name_client,
+					 pdvinvoice,
+					 name_vendor
+			  from erpn_out
+			  where month_create_invoice=:m AND 
+			  		year_create_invoice=:y AND 
+			  		num_main_branch=:nb AND 
+			  		inn_client=:inn";
+		$smtp=$this->_em->getConnection();
+		$qr=$smtp->prepare($SQL);
+		$qr->bindParam("m", $month);
+		$qr->bindParam("y", $year);
+		$qr->bindParam("nb", $numBranch);
+		$qr->bindParam("inn", $inn);
+		$qr->execute();
+		$arrayResult=$qr->fetchAll();
+		return $arrayResult;
+
+	}
+
+	/**
+	 * Получение документов из ЕРПН
+	 *
+	 * @param $month
+	 * @param $year
+	 * @param $numBranch
+	 * @param $INN
+	 * @return array
+	 * @internal param $array
+     * @deprecated
+     */
+	public function getDocFromERPN($month, $year,$numBranch, $INN)
+	{
+		$qr=$this->createQueryBuilder('ErpnOut');
+		$qr->where('ErpnOut.monthCreateInvoice=:m');
+		$qr->setParameter('m', $month);
+		$qr->andWhere('ErpnOut.yearCreateInvoice=:y');
+		$qr->setParameter('y', $year);
+		$qr->andWhere('ErpnOut.innClient=:inn');
+		$qr->setParameter('inn', $INN);
+		$qr->andWhere('ErpnOut.numMainBranch=:nmb');
+		$qr->setParameter('nmb', $numBranch);
+
+		$result=$qr->getQuery();
+		return $result->getResult();
+
 	}
 
     /**
@@ -109,143 +254,43 @@ class ErpnOutRepository extends \Doctrine\ORM\EntityRepository
         unset($pdoConn,$smtp);
     }
 
-	/**
-	 * поиск данных в ЕРПН по условиям из класса getSearchAllFromPeriod_Branch
-	 *
-	 * @uses allFromPeriod_Branch класс поиска
-	 * @uses allFromPeriod_Branch::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
-	 *
-	 *
-	 * @param getArrayFromSearch_Interface $arrayFromSearch
-	 * @return array
-	 */
-	public function getSearchAllFromPeriod_Branch($arrayFromSearch)
-	{
+    /** Поиск данных в таблице на основании параметров переданных в объекте docFromParam
+     * @param docFromParam $param
+     * @return mixed
+     */
+    public function searchDataFromParam(docFromParam $param){
+        $objParam  = $param;
+//        $emConfig = $this->getEntityManager()->getConfiguration();
+//        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+//        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
+        $qr=$this->createQueryBuilder('ErpnIn');
 
-		$qr=$this->createQueryBuilder('ErpnOut');
-		$qr->where('ErpnOut.monthCreateInvoice=:m');
-		$qr->setParameter('m', $arrayFromSearch['monthCreateInvoice']);
-		$qr->andWhere('ErpnOut.yearCreateInvoice=:y');
-		$qr->setParameter('y', $arrayFromSearch['yearCreateInvoice']);
+        $qr->where('MONTH(ErpnIn.dateCreateInvoice)=:m');
+        $qr->setParameter('m',$objParam->getMonthCreate());
 
-		if(array_key_exists('numBranchVendor', $arrayFromSearch))
-		{
-			$qr->andWhere('ErpnOut.numBranchVendor=:nbv');
-			$qr->setParameter('nbv', $arrayFromSearch['numBranchVendor']);
-		}
+        $qr->andWhere('YEAR(ErpnIn.dateCreateInvoice)=:y');
+        $qr->setParameter('y', $objParam->getYearCreate());
 
-		if(array_key_exists('numMainBranch', $arrayFromSearch))
-		{
-			$qr->andWhere('ErpnOut.numMainBranch=:nmb');
-			$qr->setParameter('nmb', $arrayFromSearch['numMainBranch']);
-		}
+        $qr->andWhere('ErpnIn.typeInvoiceFull=:t');
+        $qr->setParameter('t', $objParam->getTypeDoc());
 
-		$result=$qr->getQuery();
-		return $result->getResult();
-	}
+        if ($objParam->getDateCreateDoc()!=null){
+            $qr->andWhere('ErpnIn.dateCreateInvoice=:d');
+            $qr->setParameter('d', $objParam->getDateCreateDoc());
+        }
 
-	/**
-	 * поиск данных в ЕРПН по условиям из класса getSearchAllFromPeriod_Branch
-	 *
-	 * @uses allFromPeriod_Branch класс поиска
-	 * @uses allFromPeriod_Branch::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
-	 *
-	 *
-	 * @param getArrayFromSearch_Interface $arrayFromSearch
-	 * @return array
-	 */
-	public function getSearchAllFromParam($arrayFromSearch)
-	{
+        if ($objParam->getINN()!=0){
+            $qr->andWhere('ErpnIn.innClient=:i');
+            $qr->setParameter('i', $objParam->getINN());
+        }
 
-		$qr=$this->createQueryBuilder('ErpnOut');
-		$qr->where('ErpnOut.monthCreateInvoice=:m');
-		$qr->setParameter('m', $arrayFromSearch['monthCreateInvoice']);
-		$qr->andWhere('ErpnOut.yearCreateInvoice=:y');
-		$qr->setParameter('y', $arrayFromSearch['yearCreateInvoice']);
-		$qr->andWhere('ErpnOut.typeInvoiceFull=:t');
-		$qr->setParameter('t', $arrayFromSearch['typeInvoiceFull']);
+        if ($objParam->getNumDoc()!=0){
+            $qr->andWhere('ErpnIn.numInvoice=:ni');
+            $qr->setParameter('ni', $objParam->getNumDoc());
+        }
 
+        $result=$qr->getQuery();
+        return $result->getResult();
 
-		if(array_key_exists('innClient', $arrayFromSearch))
-		{
-			$qr->andWhere('ErpnOut.innClient=:inn');
-			$qr->setParameter('inn', $arrayFromSearch['innClient']);
-		}
-
-		if(array_key_exists('numInvoice', $arrayFromSearch))
-		{
-			$qr->andWhere('ErpnOut.numInvoice=:ni');
-			$qr->setParameter('ni', $arrayFromSearch['numInvoice']);
-		}
-
-		if(array_key_exists('dateCreateInvoice', $arrayFromSearch))
-		{
-			$qr->andWhere('ErpnOut.dateCreateInvoice=:dсi');
-			$qr->setParameter('dсi', $arrayFromSearch['dateCreateInvoice']);
-		}
-
-		$result=$qr->getQuery();
-		return $result->getResult();
-	}
-
-	/**
-	 * @param $month
-	 * @param $year
-	 * @param $numBranch
-	 * @param $inn
-	 * @return array
-	 */
-	public function getAnalizData(int $month, int $year, string $numBranch, string $inn)
-	{
-		$SQL="Select num_invoice, 
-					date_format(date_create_invoice,'%d.%m.%Y'),
-					type_invoice_full,
-					inn_client,
-					 name_client,
-					 pdvinvoice,
-					 name_vendor
-			  from erpn_out
-			  where month_create_invoice=:m AND 
-			  		year_create_invoice=:y AND 
-			  		num_main_branch=:nb AND 
-			  		inn_client=:inn";
-		$smtp=$this->_em->getConnection();
-		$qr=$smtp->prepare($SQL);
-		$qr->bindParam("m", $month);
-		$qr->bindParam("y", $year);
-		$qr->bindParam("nb", $numBranch);
-		$qr->bindParam("inn", $inn);
-		$qr->execute();
-		$arrayResult=$qr->fetchAll();
-		return $arrayResult;
-
-	}
-
-
-	/**
-	 * Получение документов из ЕРПН
-	 *
-	 * @param $month
-	 * @param $year
-	 * @param $numBranch
-	 * @param $INN
-	 * @return array
-	 * @internal param $array
-	 */
-	public function getDocFromERPN($month, $year,$numBranch, $INN)
-	{
-		$qr=$this->createQueryBuilder('ErpnOut');
-		$qr->where('ErpnOut.monthCreateInvoice=:m');
-		$qr->setParameter('m', $month);
-		$qr->andWhere('ErpnOut.yearCreateInvoice=:y');
-		$qr->setParameter('y', $year);
-		$qr->andWhere('ErpnOut.innClient=:inn');
-		$qr->setParameter('inn', $INN);
-		$qr->andWhere('ErpnOut.numMainBranch=:nmb');
-		$qr->setParameter('nmb', $numBranch);
-
-		$result=$qr->getQuery();
-		return $result->getResult();
-
-	}
+    }
 }
