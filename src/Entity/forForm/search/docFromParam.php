@@ -34,7 +34,7 @@ class docFromParam extends searchAbstract
 		{
 			parent::__construct();
 			$this->setTypeDoc("ПНЕ");
-			$this->setNumDoc(" ");
+			$this->setNumDoc(null);
 			// null что бы корректно отображалась форма ввода
 			$this->setINN(null);
 		}
@@ -102,7 +102,7 @@ class docFromParam extends searchAbstract
 	public function setNumDoc($numDoc)
 	{
 		if (empty($numDoc)) {
-			$this->numDoc = "0";
+			$this->numDoc = null;
 		} else
 		{
 			$this->numDoc = $numDoc;
@@ -187,7 +187,7 @@ class docFromParam extends searchAbstract
 			)));
 		*/
 		// проверка номера документа
-		$metadata->addPropertyConstraint("numDoc", new ContainsNumDoc());
+		//$metadata->addPropertyConstraint("numDoc", new ContainsNumDoc());
 		/*
 		$metadata->addPropertyConstraint("numDoc", new Assert\NotEqualTo(
 			array(
@@ -232,6 +232,15 @@ class docFromParam extends searchAbstract
 	 */
 	public function validate(ExecutionContextInterface $context, $payload)
 	{
+	    //если поле номер документа заполнено
+        $message = '"%string%" - не верный номер документа ';
+	    if (!is_null($this->numDoc)){
+            if (preg_match("/[^0-9\/]/",$this->numDoc, $matches)) {
+                $context->buildViolation($message)
+                    ->setParameter('%string%', $this->numDoc)
+                    ->addViolation();
+            }
+        }
 		// Если заполнено поле  dateCreateDoc
 		if(!is_null($this->dateCreateDoc)){
 			// получем массив содержащий дату документа
