@@ -62,4 +62,4 @@ services:
     #  сервис для поиска данных в ЕРПН по параметрам
     app.services.search_erpn_from_param:
         class: App\Services\searchErpnFromParam
-        arguments: ['@doctrine.orm.default_entity_manager']
+        arguments: ['@Doctrine\ORM\EntityManagerInterface']

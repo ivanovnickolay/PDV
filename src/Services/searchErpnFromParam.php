@@ -11,6 +11,7 @@ use App\Entity\ErpnIn;
 use App\Entity\ErpnOut;
 use App\Entity\forForm\search\docFromParam;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validation;
 
 /**
@@ -29,7 +30,7 @@ class searchErpnFromParam
      */
     private $paramSearch;
 
-    public function __construct(EntityManager $entityManager){
+    public function __construct(EntityManagerInterface $entityManager){
         $this->em = $entityManager;
     }
 

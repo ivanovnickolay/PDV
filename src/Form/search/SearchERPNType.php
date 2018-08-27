@@ -60,7 +60,9 @@ class SearchERPNType extends AbstractType
                             ->add('typeDoc',ChoiceType::class, array(
                                 'choices'=>$correctTypeDoc, 'label'=>"Тип документа"
                             ))
-                        ->add('iNN',IntegerType::class,array('label'=>"ИНН клиента"))
+                        ->add('iNN',IntegerType::class,array(
+                            'label'=>"ИНН клиента",
+                            'attr'=>['step'=>1]))
                     ->add('routeSearch', ChoiceType::class, array(
                         'choices'=>$correctRoute, 'label'=>"Направление поиска"
                     ))

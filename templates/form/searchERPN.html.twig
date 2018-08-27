@@ -6,94 +6,14 @@
 {% block form %}
 
 
-    <h3>Поиск документов в ЕРПН и Реестрам за период </h3>
+    <h3>Поиск документов в ЕРПН за период </h3>
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}
-
+    <script src={{ asset('JS/handlerForm/validationForm.js') }}></script>
+    <script src={{ asset('JS/handlerForm/searchERPN.js') }}></script>
     <script>
 
-        // после загрузки DOM настраиваем поля
-        document.addEventListener('DOMContentLoaded',init);
-        // действия по настройке полей
-        function init() {
-            var month  = document.getElementById('search_erpn_monthCreate').value;
-            var year  = document.getElementById('search_erpn_yearCreate').value;
-            var dateCreate = document.getElementById('search_erpn_dateCreateDoc');
-            // установим атрибут - вывод даты
-            dateCreate.setAttribute('type','date');
-            // установим допустимые границы ввода данных
-            var beginData = new Date(year,month-1,1);
-            var strBeginDate = beginData.getFullYear()+"-"+ getValidMonthAndDay(beginData.getMonth()+1)+"-"+getValidMonthAndDay(beginData.getDate());
-            dateCreate.setAttribute('min',strBeginDate);
-            var endData = new Date(year,month,0);
-            var strEndDate = endData.getFullYear()+"-"+ getValidMonthAndDay(endData.getMonth()+1)+"-"+getValidMonthAndDay(endData.getDate());
-            dateCreate.setAttribute('max',strEndDate);
-            // установим начальное значение - первый день месяца
-            //dateCreate.setAttribute('value',strBeginDate);
-        }
-        function getValidMonthAndDay(value) {
-            if (value<10){
-                return "0"+value;
-            }else {
-                return value;
-            }
-        }
 
-        search_erpn_dateCreateDoc.addEventListener('focus',initRangeDate);
-        // действия при получении полем ввода фокуса установим пределы ввода даты
-        function initRangeDate() {
-            var month  = document.getElementById('search_erpn_monthCreate').value;
-            var year  = document.getElementById('search_erpn_yearCreate').value;
-            var dateCreate = document.getElementById('search_erpn_dateCreateDoc');
-            // установим допустимые границы ввода данных
-            var beginData = new Date(year,month-1,1);
-            var strBeginDate = beginData.getFullYear()+"-"+ getValidMonthAndDay(beginData.getMonth()+1)+"-"+getValidMonthAndDay(beginData.getDate());
-            dateCreate.setAttribute('min',strBeginDate);
-            var endData = new Date(year,month,0);
-            var strEndDate = endData.getFullYear()+"-"+ getValidMonthAndDay(endData.getMonth()+1)+"-"+getValidMonthAndDay(endData.getDate());
-            dateCreate.setAttribute('max',strEndDate);
-            // установим начальное значение - первый день месяца
-            //dateCreate.setAttribute('value',strBeginDate);
-        }
-        search_erpn_iNN.addEventListener('change',validINN);
-        function validINN() {
-            var INN = document.getElementById('search_erpn_iNN');
-                var valueINN = INN.value;
-                if (valueINN.length>12){
-                    alert("Длина ИНН не может быть более 12 цифр");
-                    INN.focus();
-                }
-            if (valueINN.length<10){
-                alert("Длина ИНН не может быть меньше 10 цифр");
-                INN.focus();
-            }
-            if (valueINN.length==11){
-                alert("Длина ИНН не может быть равна 11 цифрам");
-                INN.focus();
-            }
-
-        }
-       var sbm =  document.getElementById('search_erpn_Search');
-        sbm.addEventListener('click', function(event) {
-            // отключаем значение по умолчанию для кнопки submit
-            event.preventDefault();
-            var form = document.getElementsByName('search_erpn');
-            // link https://developer.mozilla.org/ru/docs/Web/API/FormData/Using_FormData_Objects
-            var formData = new FormData(form);
-           // link https://toster.ru/q/523077
-           //  processData - отвечает за то, что бы jQuery не пытался превратить объект который вы кидаете внутрь запроса в соответствии с Content-type: 'application/x-www-form-urlencoded'.
-           //  contentType - это будет ли устанавливать jQuery заголовок Content-type. (мб вам и не понадобится)
-           // иначе данные формы сформированные через  new FormData(form) не передаются корректно
-
-            // Ajax запрос
-            $.ajax({
-                url:'{{ path('searchERPN') }}',
-                type:'POST',
-                data:formData,
-                processData: false,
-                contentType: false
-                });
-       });
 </script>
 {% endblock %}
