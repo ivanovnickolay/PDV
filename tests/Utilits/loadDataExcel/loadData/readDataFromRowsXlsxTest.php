@@ -13,7 +13,7 @@ use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 use App\Utilits\loadDataExcel\handlerRow\handlerRowsValid;
 use PHPUnit\Framework\TestCase;
 
-class loadRowsTest extends TestCase
+class readDataFromRowsXlsxTest extends TestCase
 {
 
     /**

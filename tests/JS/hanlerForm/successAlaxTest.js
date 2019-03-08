@@ -23,22 +23,26 @@ function loadJSONFromFile( fileName) {
     var responseData=JSON.parse(dataFromFile);
     return responseData;
 }
+
 var assert = require('assert');
 var chai = require('chai').assert;
+var Erpn = require('../../../assets/js/Ajax/ajaxSearchErpnForm');
 
 require('../../../public/JS/jquery-3.3.1.min');
 
-var testAlax = require('../../../public/JS/handlerForm/ajaxSearchErpnForm');
+//var testAlax = require('../../../assets/js/Ajax/ajaxSearchErpnForm');
 
 var SearchDataIn = __dirname+'\\responseSearchDataIn.json';
 var responseIn = loadJSONFromFile(SearchDataIn);
 
 describe('тестирование ajaxSearchErpnForm с данными SearchDataIn',function () {
     // получаем сформированную таблицу
-    var htmlTable = testAlax.successAlax(responseIn);
+    var testAjax = new Erpn();
+    //var htmlTable = testAlax.successAlax(responseIn);
+    var htmlTable = testAjax.successAjax(responseIn);
 
     it('Проверка правильности заполнения шапки таблицы',function () {
-        headerTable = testAlax.getHeaderTable();
+        headerTable = testAjax.getHeaderTable();
         chai.exists(headerTable, htmlTable)
     })
     it('Проверка содержимого по первой строке ',function () {
@@ -61,10 +65,11 @@ var responseOut = loadJSONFromFile(SearchDataOut);
 
 describe('тестирование ajaxSearchErpnForm с данными SearchDataOut',function () {
     // получаем сформированную таблицу
-    var htmlTable = testAlax.successAlax(responseOut);
+    var testAjax = new Erpn();
+    var htmlTable = testAjax.successAjax(responseOut);
 
     it('Проверка правильности заполнения шапки таблицы',function () {
-        headerTable = testAlax.getHeaderTable();
+        headerTable = testAjax.getHeaderTable();
         chai.exists(headerTable, htmlTable)
     })
     it('Проверка содержимого по первой строке ',function () {

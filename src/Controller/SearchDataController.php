@@ -7,6 +7,7 @@ use App\Form\search\SearchERPNType;
 use App\Services\searchErpnFromParam;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,7 +32,8 @@ class SearchDataController extends Controller
             $param = $this->parseRequestsearchERPN($request);
             $searchErpnFromParam->setParamSearch($param);
             $arrayResult = $searchErpnFromParam->search();
-            return $this->json($arrayResult);
+            //return $this->json($arrayResult);
+            return new JsonResponse($arrayResult, 200);
         }
     }
 
@@ -46,7 +48,11 @@ class SearchDataController extends Controller
             $obj->setMonthCreate($requestParam["monthCreate"]);
             $obj->setYearCreate($requestParam["yearCreate"]);
             $obj->setNumDoc($requestParam["numDoc"]);
-            $obj->setDateCreateDoc($requestParam["dateCreateDoc"]);
+            if (is_null($requestParam["dateCreateDoc"])){
+                $obj->setDateCreateDoc(null);
+            }else{
+                $obj->setDateCreateDoc(new \DateTime($requestParam["dateCreateDoc"]));
+            }
             $obj->setTypeDoc($requestParam["typeDoc"]);
             $obj->setINN($requestParam["iNN"]);
             $obj->setRouteSearch($requestParam["routeSearch"]);

@@ -61,7 +61,7 @@ class SearchDataControllerTest extends WebTestCase
             $client->request('GET','/search');
                 $this->assertContains("<title>Анализ ПДВ </title>",$client->getResponse()->getContent());
                     $this->assertContains("<form name=\"search_erpn\" method=\"post\" novalidate=\"novalidate\">",$client->getResponse()->getContent());
-        $this->assertContains(" <h3>Поиск документов в ЕРПН за период </h3>",$client->getResponse()->getContent());
+        $this->assertContains(" <b>Поиск документов в ЕРПН за период </b>",$client->getResponse()->getContent());
     }
 
     /**
@@ -93,7 +93,7 @@ class SearchDataControllerTest extends WebTestCase
         // проверим количество ошибок
             $this->assertEquals(1,count($dataReturn->error));
                 // проверим содержание ошибки
-                $this->assertEquals("ИНН \"hlsdhfdlshf\" должен содержать только цифры .",$dataReturn->error->INN);
+                $this->assertEquals("ИНН hlsdhfdlshf должен содержать только цифры ",$dataReturn->error->INN);
                     // проверим код возврата
                     $this->assertEquals(
                 200, // or Symfony\Component\HttpFoundation\Response::HTTP_OK
@@ -132,7 +132,7 @@ class SearchDataControllerTest extends WebTestCase
         // проверим количество ошибок
         $this->assertEquals(1,count($dataReturn->error));
         // проверим содержание ошибки
-        $this->assertEquals("ИНН \"hlsdhfdlshf\" должен содержать только цифры .",$dataReturn->error->INN);
+        $this->assertEquals("ИНН hlsdhfdlshf должен содержать только цифры ",$dataReturn->error->INN);
         // проверим код возврата
         $this->assertEquals(
             200, // or Symfony\Component\HttpFoundation\Response::HTTP_OK

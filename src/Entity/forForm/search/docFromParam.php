@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
+// todo покрыть валидацию тестами !!!
 /**
  * Класс реализует форму поиска данных в ЕРПН и Реестре
  * по следующим параметрам
@@ -212,16 +212,16 @@ class docFromParam extends searchAbstract
 			)
 		));
 		*/
-		$metadata->addPropertyConstraint('INN', new Assert\Length(array(
-			'min'        => 0,
-			'max'        => 12,
-			'maxMessage' => 'Длина ИНН не может быть более {{ limit }} цифр',
-		)));
-		$metadata->addPropertyConstraint('INN', new Assert\Type(array(
-			'type'    => 'digit',
-			'message' => 'ИНН {{ value }} должен содержать только цифры .',
-		)));
-		$metadata->addConstraint(new Assert\Callback('validate'));
+//		$metadata->addPropertyConstraint('INN', new Assert\Length(array(
+//			'min'        => 0,
+//			'max'        => 12,
+//			'maxMessage' => 'Длина ИНН не может быть более {{ limit }} цифр',
+//		)));
+//		$metadata->addPropertyConstraint('INN', new Assert\Type(array(
+//			'type'    => 'digit',
+//			'message' => 'ИНН {{ value }} должен содержать только цифры .',
+//		)));
+	$metadata->addConstraint(new Assert\Callback('validate'));
 	}
 
 	/**
@@ -234,16 +234,18 @@ class docFromParam extends searchAbstract
 	{
 	    //если поле номер документа заполнено
         $message = '"%string%" - не верный номер документа ';
-	    if (!is_null($this->numDoc)){
-            if (preg_match("/[^0-9\/]/",$this->numDoc, $matches)) {
+	   if (!is_null($this->numDoc)){
+        if(!$this->isValidNumDoc()){
+            //if (preg_match("/[^0-9\/]/",$this->numDoc, $matches)) {
                 $context->buildViolation($message)
                     ->setParameter('%string%', $this->numDoc)
+                    ->atPath("numDoc")
                     ->addViolation();
-            }
+           }
         }
 		// Если заполнено поле  dateCreateDoc
 		if(!is_null($this->dateCreateDoc)){
-			// получем массив содержащий дату документа
+       	// получем массив содержащий дату документа
 			$dateCreate=getdate($this->dateCreateDoc->getTimestamp());
 			// ЕСЛИ месяц или год не совпадают = генерируем ошибку
 			if (($dateCreate['mon']!=$this->getMonthCreate()) or($dateCreate['year']!=$this->getYearCreate()))
@@ -253,8 +255,64 @@ class docFromParam extends searchAbstract
 						->addViolation();
 			}
 		}
+		 if (!is_null($this->INN)){
+		     if (!ctype_digit($this->INN)){
+                 $context->buildViolation("ИНН ".$this->INN." должен содержать только цифры ")
+                     ->atPath('INN')
+                     ->addViolation();
+             }else {
+		         $arrayCorrectlenght = array(10,12);
+                 $lenght = strlen($this->INN);
+                 if (!in_array($lenght,$arrayCorrectlenght)) {
+                     $context->buildViolation("ИНН ".$this->INN." должен иметь длину или 10 или 12 символов !")
+                         ->atPath('INN')
+                         ->addViolation();
+                 }
+             }
+
+         }
 	}
 
+    /**
+     * @return bool
+     */
+    private function isValidNumDoc(){
+	    $nd = $this->numDoc;
+	    $lenghtStr = strlen($nd);
+	    $firstSlach = strpos($nd,"/");
+	    if (false==$firstSlach){
+            //если в строке не / значит строка должна содержать только цифрв
+            if (!ctype_digit($nd)) {
+               return false;
+            } else {
+                return true;
+            }
+        }else{
+	        // если есть один / проверим есть ли // (два подряд)
+            if(($firstSlach+1)==$lenghtStr){return false;}
+            if("/"==$nd[$firstSlach+1]){
+                // если "//"
+                if(($firstSlach+2)==$lenghtStr){return false;}
+                if("/"==$nd[$firstSlach+2]){
+                    // если "///" - номер не валидный
+                    return false;
+                }
+                // делим строку на две части
+                $arraySplit = explode('//',$nd);
+                if((!ctype_digit($arraySplit[0]))and(!ctype_digit($arraySplit[1]))){
+                    return true;
+                }
+            }else{
+                // в строке только один "/" - номер не валидный
+                return false;
+            }
+            if (preg_match("/[^0-9\/]/",$nd)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 	/**
 	 * формирование массива для передачи в запрос
 	 *
