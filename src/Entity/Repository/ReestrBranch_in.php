@@ -11,19 +11,20 @@ use App\Entity\forForm\search\docFromParam;
  */
 class ReestrBranch_in extends \Doctrine\ORM\EntityRepository
 {
-	/**
-	 * поиск данных в Реестре выданых НН по параметрам
-	 *
-	 * @uses allFromPeriod_Branch класс поиска
-	 * @uses allFromPeriod_Branch::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
-	 *
-	 * использованные расширения
-	 * @link  https://simukti.net/blog/2012/04/05/how-to-select-year-month-day-in-doctrine2/
-	 * @link  https://github.com/beberlei/DoctrineExtensions
-	 *
-	 *
-	 * @param $arrayFromSearch
-	 */
+    /**
+     * поиск данных в Реестре выданых НН по параметрам
+     *
+     * @uses allFromPeriod_Branch класс поиска
+     * @uses allFromPeriod_Branch::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
+     *
+     * использованные расширения
+     * @link  https://simukti.net/blog/2012/04/05/how-to-select-year-month-day-in-doctrine2/
+     * @link  https://github.com/beberlei/DoctrineExtensions
+     *
+     * @deprecated
+     * @param $arrayFromSearch
+     * @return mixed
+     */
 	public function getSearchAllFromPeriod_Branch($arrayFromSearch)
 	{
 		$emConfig = $this->getEntityManager()->getConfiguration();
@@ -46,19 +47,20 @@ class ReestrBranch_in extends \Doctrine\ORM\EntityRepository
 		return $result->getResult();
 	}
 
-	/**
-	 * поиск данных в Реестре выданых НН по параметрам
-	 *
-	 * @uses docFromParam класс поиска
-	 * @uses docFromParam::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
-	 *
-	 * использованные расширения
-	 * @link  https://simukti.net/blog/2012/04/05/how-to-select-year-month-day-in-doctrine2/
-	 * @link  https://github.com/beberlei/DoctrineExtensions
-	 *
-	 *
-	 * @param $arrayFromSearch
-	 */
+    /**
+     * поиск данных в Реестре выданых НН по параметрам
+     *
+     * @uses docFromParam класс поиска
+     * @uses docFromParam::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
+     *
+     * использованные расширения
+     * @link  https://simukti.net/blog/2012/04/05/how-to-select-year-month-day-in-doctrine2/
+     * @link  https://github.com/beberlei/DoctrineExtensions
+     *
+     * @deprecated
+     * @param $arrayFromSearch
+     * @return mixed
+     */
 	public function getSearchAllFromParam($arrayFromSearch)
 	{
 		$emConfig = $this->getEntityManager()->getConfiguration();
@@ -95,4 +97,45 @@ class ReestrBranch_in extends \Doctrine\ORM\EntityRepository
 		$result=$qr->getQuery();
 		return $result->getResult();
 	}
+
+    /** Поиск данных в таблице на основании параметров переданных в объекте docFromParam
+     * @param docFromParam $param
+     * @see  searchReestrFromParam::getSearchData()
+     * @return mixed
+     */
+    public function searchDataFromParam(docFromParam $param)
+    {
+        $objParam = $param;
+//        $emConfig = $this->getEntityManager()->getConfiguration();
+//        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+//        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
+        $qr = $this->createQueryBuilder('reestr_branch_in');
+
+        $qr->where('MONTH(reestr_branch_in.dateCreateInvoice)=:m');
+        $qr->setParameter('m', $objParam->getMonthCreate());
+
+        $qr->andWhere('YEAR(reestr_branch_in.dateCreateInvoice)=:y');
+        $qr->setParameter('y', $objParam->getYearCreate());
+
+        $qr->andWhere('reestr_branch_in.typeInvoiceFull=:t');
+        $qr->setParameter('t', $objParam->getTypeDoc());
+
+        if ($objParam->getDateCreateDoc() != null) {
+            $qr->andWhere('reestr_branch_in.dateCreateInvoice=:d');
+            $qr->setParameter('d', $objParam->getDateCreateDoc());
+        }
+
+        if ($objParam->getINN() != 0) {
+            $qr->andWhere('reestr_branch_in.innClient=:i');
+            $qr->setParameter('i', $objParam->getINN());
+        }
+
+        if ($objParam->getNumDoc() != 0) {
+            $qr->andWhere('reestr_branch_in.numInvoice=:ni');
+            $qr->setParameter('ni', $objParam->getNumDoc());
+        }
+
+        $result = $qr->getQuery();
+        return $result->getResult();
+    }
 }

@@ -1,0 +1,54 @@
+{% extends "base.html.twig" %}
+{% form_theme form 'form_table_layout.html.twig' %}
+{% block stylesheets_page %}
+     {#<link rel="stylesheet" href={{ asset('JS/jquery-ui-1.12.1.custom/jquery-ui.theme.css') }}>#}
+    <style>
+        th {
+            font-weight: normal;
+            text-align: center;
+            vertical-align:center ;
+        }
+        td {
+            align-content: center;
+            vertical-align: center;
+        }
+    </style>
+    {% endblock %}
+{% block form %}
+    <div class="col-md-3">
+            <b>Поиск документов в Реестре выданных и полученных документов за период </b>
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+            {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('search') }}
+    </div>
+    <div class="col-md-8">
+                    <div class = "table">
+                        <b>Результат поиска данных </b>
+                        <table class="table table-bordered table-sm" >
+                            <thead class=".thead-light">
+                                <tr>
+                                    <th>Номер документа</th>
+                                    <th>Дата создания документа</th>
+                                    <th>Тип документа</th>
+                                    <th>ИНН клиента </th>
+                                    <th>Наименование клиента</th>
+                                    <th>Сумма с ПДВ, грн</th>
+                                    <th>База, грн</th>
+                                    <th>ПДВ, грн</th>
+                                    <th>Наименование поставщика</th>
+                                    <th>Номер филиала поставщика</th>
+                                </tr>
+                            </thead>
+                            <tbody class="ajaxResult">
+
+                            </tbody>
+                        </table>
+                    </div>
+    </div>
+
+
+
+
+{% endblock %}

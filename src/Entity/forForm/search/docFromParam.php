@@ -125,7 +125,8 @@ class docFromParam extends searchAbstract
 	 */
 	public function setTypeDoc($typeDoc)
 	{
-		$typeDocArray=["ПНЕ","РКЕ"];
+	    // все разрещенные типы документов
+		$typeDocArray=["ПНЕ","РКЕ","ГР","ТК","МДЕ"];
 		if (in_array($typeDoc, $typeDocArray))
 		{
 			$this->typeDoc = $typeDoc;

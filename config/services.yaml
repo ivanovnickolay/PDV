@@ -61,5 +61,5 @@ services:
             $dirForFilesERPN_Out: '%dirForFilesERPN_Out%'
     #  сервис для поиска данных в ЕРПН по параметрам
     app.services.search_erpn_from_param:
-        class: App\Services\searchErpnFromParam
+        class: App\Services\searchDataFromParam\searchErpnFromParam
         arguments: ['@Doctrine\ORM\EntityManagerInterface']

@@ -2,6 +2,9 @@
 
 namespace App\Entity\Repository;
 
+use App\Entity\forForm\search\docFromParam;
+use App\Services\searchReestrFromParam;
+
 /**
  * ReestrBranch_out
  *
@@ -24,7 +27,7 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
 	 * @link  https://simukti.net/blog/2012/04/05/how-to-select-year-month-day-in-doctrine2/
 	 * @link  https://github.com/beberlei/DoctrineExtensions
 	 *
-	 *
+	 * @deprecated
 	 * @param $arrayFromSearch
 	 * @return array
 	 */
@@ -60,7 +63,7 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
 	 * @link  https://simukti.net/blog/2012/04/05/how-to-select-year-month-day-in-doctrine2/
 	 * @link  https://github.com/beberlei/DoctrineExtensions
 	 *
-	 *
+	 * @deprecated
 	 * @param $arrayFromSearch
 	 * @return array
 	 */
@@ -101,13 +104,15 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
 		return $result->getResult();
 	}
 
-	/**
-	 * Проверка наличия рестра в периоде
-	 * @param $month string
-	 * @param $year string
-	 * @param $numMainBranch string
-	 * @return bool
-	 */
+    /**
+     * Проверка наличия рестра в периоде
+     * @param $month string
+     * @param $year string
+     * @param $numMainBranch string
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     * @todo  ПЕРЕПИСАТЬ НА ИСПОЛЬЗОВАНИЕ  count()
+     */
 	public function is_NumMainBranchToPeriod($month, $year, $numMainBranch)
 	{
 		$qr=$this->_em->getConnection()->prepare(
@@ -130,13 +135,15 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
 		}
 	}
 
-	/**
-	 * @param int $month
-	 * @param int $year
-	 * @param string $numBranch
-	 * @param string $inn
-	 * @return array
-	 */
+    /**
+     * @deprecated
+     * @param int $month
+     * @param int $year
+     * @param string $numBranch
+     * @param string $inn
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
 	public function getAnalizData(int $month, int $year, string $numBranch, string $inn)
 	{
 		$SQL="Select 
@@ -169,7 +176,7 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
 
 	/**
 	 * Получение документов из РПН
-	 *
+	 * @deprecated
 	 * @param $month
 	 * @param $year
 	 * @param $numBranch
@@ -196,4 +203,45 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
 		return $result->getResult();
 
 	}
+
+    /** Поиск данных в таблице на основании параметров переданных в объекте docFromParam
+     * @param docFromParam $param
+     * @see  searchReestrFromParam::getSearchData()
+     * @return mixed
+     */
+    public function searchDataFromParam(docFromParam $param)
+    {
+        $objParam = $param;
+//        $emConfig = $this->getEntityManager()->getConfiguration();
+//        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+//        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
+        $qr = $this->createQueryBuilder('reestr_branch_out');
+
+        $qr->where('MONTH(reestr_branch_out.dateCreateInvoice)=:m');
+        $qr->setParameter('m', $objParam->getMonthCreate());
+
+        $qr->andWhere('YEAR(reestr_branch_out.dateCreateInvoice)=:y');
+        $qr->setParameter('y', $objParam->getYearCreate());
+
+        $qr->andWhere('reestr_branch_out.typeInvoiceFull=:t');
+        $qr->setParameter('t', $objParam->getTypeDoc());
+
+        if ($objParam->getDateCreateDoc() != null) {
+            $qr->andWhere('reestr_branch_out.dateCreateInvoice=:d');
+            $qr->setParameter('d', $objParam->getDateCreateDoc());
+        }
+
+        if ($objParam->getINN() != 0) {
+            $qr->andWhere('reestr_branch_out.innClient=:i');
+            $qr->setParameter('i', $objParam->getINN());
+        }
+
+        if ($objParam->getNumDoc() != 0) {
+            $qr->andWhere('reestr_branch_out.numInvoice=:ni');
+            $qr->setParameter('ni', $objParam->getNumDoc());
+        }
+
+        $result = $qr->getQuery();
+        return $result->getResult();
+    }
 }

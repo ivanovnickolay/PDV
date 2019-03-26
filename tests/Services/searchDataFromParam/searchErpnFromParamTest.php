@@ -11,7 +11,9 @@ namespace Services;
 use App\Entity\ErpnIn;
 use App\Entity\ErpnOut;
 use App\Entity\forForm\search\docFromParam;
-use App\Services\searchErpnFromParam;
+use App\Services\searchDataFromParam\searchErpnFromParam;
+use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
+use Doctrine\DBAL\DBALException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class searchErpnFromParamTest extends KernelTestCase
@@ -44,7 +46,19 @@ class searchErpnFromParamTest extends KernelTestCase
         if ("AnalizPDV_test"!=$rr){
             throw new \Exception();
         }
+        // загрузка тестовых данных
+        $this->loadData();
     }
+
+    /**
+     * при уничтожении объекта - ощистим базу данных
+     */
+    public function __destruct()
+    {
+        $this->clearDB();
+    }
+
+
     /**
      * инициализация типовых параметров
      */
@@ -69,7 +83,7 @@ class searchErpnFromParamTest extends KernelTestCase
         $obj->setParamSearch($this->param);
         $res1 = $method->invoke($obj);
         $this->assertEquals(1,count($res1));
-        $this->assertEquals("ИНН \"hlsdhfdlshf\" должен содержать только цифры .",$res1["INN"]);
+        $this->assertEquals("ИНН hlsdhfdlshf должен содержать только цифры ",$res1["INN"]);
 
         $this->param->setDateCreateDoc(new \DateTime("2018-01-01"));
         $res2 = $method->invoke($obj);
@@ -105,6 +119,8 @@ class searchErpnFromParamTest extends KernelTestCase
 
     /**
      * Тестирование приватного метода getArraySearchData -  полученния данных поиска в виде массива значений
+     * @throws \App\Utilits\loadDataExcel\Exception\errorLoadDataException
+     * @throws \Doctrine\DBAL\DBALException
      * @throws \ReflectionException
      */
     public function test_getArraySearchData(){
@@ -155,8 +171,12 @@ class searchErpnFromParamTest extends KernelTestCase
      * тестирование ошибок валидации данных - про наличии ошибок поиск проиходит не должен
      */
     public function test_search_ErrorValidation(){
-        $this->loadData();
-            $this->initParam();
+        try {
+            $this->loadData();
+        } catch (errorLoadDataException $e) {
+        } catch (DBALException $e) {
+        }
+        $this->initParam();
     $obj = new searchErpnFromParam($this->em);
     // проверка на ошибки валидации
         // в обязательствах
@@ -186,8 +206,12 @@ class searchErpnFromParamTest extends KernelTestCase
         $this->clearDB();
     }
     public function test_search_DataSearch(){
-        $this->loadData();
-            $this->initParam();
+        try {
+            $this->loadData();
+        } catch (errorLoadDataException $e) {
+        } catch (DBALException $e) {
+        }
+        $this->initParam();
             $obj = new searchErpnFromParam($this->em);
             // проверка на ошибки валидации
             // в обязательствах

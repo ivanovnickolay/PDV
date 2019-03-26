@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\forForm\search\docFromParam;
 use App\Form\search\SearchERPNType;
-use App\Services\searchErpnFromParam;
+
+use App\Services\searchDataFromParam\searchErpnFromParam;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -57,5 +58,10 @@ class SearchDataController extends Controller
             $obj->setINN($requestParam["iNN"]);
             $obj->setRouteSearch($requestParam["routeSearch"]);
             return $obj;
+        }
+
+
+        public function searchReestr(Request $request){
+
         }
 }

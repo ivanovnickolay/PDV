@@ -61,6 +61,8 @@ use App\Tests\Entity\forForm\searchAbstractTest;
 
 	/**
 	 * Допустимые значения $routeSearch
+     *  - Обязательства
+     *  - Кредит
 	 * @var array
 	 */
 	protected $correctRouteSearch=["Обязательства","Кредит"];
@@ -145,7 +147,11 @@ use App\Tests\Entity\forForm\searchAbstractTest;
 	}
 
 	/**
-	 * @param string $routeSearch
+     * Допустимые значения
+     * - Обязательства
+     * - Кредит
+     * @see correctRouteSearch  Допустимые значения
+     * @param string $routeSearch
 	 */
 	 final public function setRouteSearch( $routeSearch)
 	{
