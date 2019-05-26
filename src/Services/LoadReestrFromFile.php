@@ -141,6 +141,7 @@ class LoadReestrFromFile
      *          -   переносим файл в директорию для успешно загруженных файлов
      *          -   очищаем все используемые в классе объекты перед загрузкой нового файла
      *
+     * @throws errorLoadDataException
      */
     public function execute()
     {

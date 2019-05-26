@@ -9,7 +9,6 @@
 namespace App\Utilits\loadDataExcel\ValidEntity;
 
 
-use App\Utilits\ValidEntity\interfaceValidEntity;
 
 class validReestrOut extends interfaceValidEntity
 {

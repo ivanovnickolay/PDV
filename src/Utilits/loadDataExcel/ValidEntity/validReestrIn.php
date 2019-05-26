@@ -9,7 +9,7 @@
 namespace App\Utilits\loadDataExcel\ValidEntity;
 
 
-use App\Utilits\ValidEntity\interfaceValidEntity;
+
 
 class validReestrIn extends interfaceValidEntity
 {

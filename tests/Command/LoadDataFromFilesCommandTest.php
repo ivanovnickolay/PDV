@@ -31,7 +31,8 @@ class LoadDataFromFilesCommandTest extends KernelTestCase
     private $dirForMoveFiles;
     private $dirFixturesFiles;
 
-    public function setUp(){
+    public function setUp():void {
+        ini_set( 'display_errors', '1' );
         // получаем Entity Manager
         $kernel = self::bootKernel();
         $this->em = $kernel->getContainer()

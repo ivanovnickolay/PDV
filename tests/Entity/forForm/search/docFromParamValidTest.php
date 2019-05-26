@@ -28,7 +28,7 @@ class docFromParamValidTest extends TestCase
      */
     private $validator;
 
-    public function setUp(){
+    public function setUp():void {
         $this->validator = Validation::createValidatorBuilder()
             ->addMethodMapping('loadValidatorMetadata')
             ->getValidator();

@@ -1,7 +1,15 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
 index:
-    path: /
-    controller: App\Controller\DefaultController::index
+  path: /
+  controller: App\Controller\DefaultController::index
 
 searchERPN:
-    path: /search
-    controller: App\Controller\SearchDataController::searchERPN
+  path: /searchERPN
+  controller: App\Controller\SearchDataController::searchERPN
+
+searchReestr:
+  path: /searchReestr
+  controller: App\Controller\SearchDataController::searchReestr

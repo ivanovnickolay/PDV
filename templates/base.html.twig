@@ -4,21 +4,24 @@
         <meta charset="UTF-8">
         <title>{% block title %}Анализ ПДВ {% endblock %}</title>
         {% block stylesheets %}
-
-             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+            {{ encore_entry_link_tags('app') }}
+        <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
         {% endblock %}
-        {% block stylesheets_page %} {% endblock %}
+        {% block stylesheets_page %}
+
+        {% endblock %}
         {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
             <!-- Optional JavaScript -->
             <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-            <script src="{{ asset('JS/jquery-ui-1.12.1.custom/jquery-ui.js') }}"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+            <!--- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+            <!--- <script src="{{ asset('JS/jquery-ui-1.12.1.custom/jquery-ui.js') }}"></script>-->
+        <!---<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+           <!--- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
         {% endblock %}
     </head>
     <body>
-    <!--
+
 <!-- Ряд, состоящий из 3 одинаковых блоков -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href={{ path('index') }}>Анализ ПДВ</a>
@@ -33,7 +36,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href={{ path('searchERPN') }}>в ЕРПН</a>
-                        <a class="dropdown-item" href="#">в Реестрах </a>
+                        <a class="dropdown-item" href={{ path('searchReestr') }}>в Реестрах </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Остальное</a>
                     </div>

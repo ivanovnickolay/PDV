@@ -29,7 +29,7 @@ class LoadReestrFromFileReestInValidDataTest extends TestCase
 {
     private $objectManager;
 
-    public function setUp(){
+    public function setUp():void {
         // настроим моки для проверки валидации из базы
         // public function findOneBy(array $criteria, array $orderBy = null)
         // @see https://exceptionshub.com/phpunits-returnvaluemap-not-yielding-expected-results.html

@@ -5,6 +5,7 @@ namespace App\Entity\Repository;
 use App\Entity\forForm\search\docFromParam;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 use App\Utilits\workToFileSystem\workWithFiles;
+use PDO;
 
 
 /**
@@ -244,14 +245,20 @@ class ErpnOutRepository extends \Doctrine\ORM\EntityRepository
         // Костыль для "разблокировки" возможности загрузки файлов
         // суть "костыля" - в создании абсолютно нового подключения к базе c ключем \PDO::MYSQL_ATTR_LOCAL_INFILE => true
         // https://stackoverflow.com/questions/18328594/an-exception-occurred-while-executing-load-data-local-infile?noredirect=1&lq=1
-        $params  = $this->_em->getConnection()->getParams();
-        $pdoConn = new \PDO('mysql:host=' .  $params['host'] . ';dbname=' . $params['dbname'], $params['user'], $params['password'], array(
-            \PDO::MYSQL_ATTR_LOCAL_INFILE => true
-        ));
-        $smtp=$pdoConn->prepare($testSQL);
+//        $params  = $this->_em->getConnection()->getParams();
+//        $pdoConn = new PDO('mysql:host=' .  $params['host'] . ';dbname=' . $params['dbname'], $params['user'], $params['password'], array(
+//            PDO::MYSQL_ATTR_LOCAL_INFILE => true
+//        ));
+//        $smtp=$pdoConn->prepare($testSQL);
+//        $smtp ->bindValue("fileName",$fileName);
+//        $smtp->execute();
+//        unset($pdoConn,$smtp);
+
+        $smtp=$this->_em->getConnection()->prepare($testSQL);
+        // $smtp=$pdoConn->prepare($testSQL);
         $smtp ->bindValue("fileName",$fileName);
         $smtp->execute();
-        unset($pdoConn,$smtp);
+        unset($smtp);
     }
 
     /** Поиск данных в таблице на основании параметров переданных в объекте docFromParam
@@ -263,29 +270,29 @@ class ErpnOutRepository extends \Doctrine\ORM\EntityRepository
 //        $emConfig = $this->getEntityManager()->getConfiguration();
 //        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
 //        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
-        $qr=$this->createQueryBuilder('ErpnIn');
+        $qr=$this->createQueryBuilder('ErpnOut');
 
-        $qr->where('MONTH(ErpnIn.dateCreateInvoice)=:m');
-        $qr->setParameter('m',$objParam->getMonthCreate());
-
-        $qr->andWhere('YEAR(ErpnIn.dateCreateInvoice)=:y');
-        $qr->setParameter('y', $objParam->getYearCreate());
-
-        $qr->andWhere('ErpnIn.typeInvoiceFull=:t');
+        $qr->Where('ErpnOut.typeInvoiceFull=:t');
         $qr->setParameter('t', $objParam->getTypeDoc());
 
         if ($objParam->getDateCreateDoc()!=null){
-            $qr->andWhere('ErpnIn.dateCreateInvoice=:d');
+            $qr->andWhere('ErpnOut.dateCreateInvoice=:d');
             $qr->setParameter('d', $objParam->getDateCreateDoc());
+        } else{
+            $qr->andWhere('MONTH(ErpnOut.dateCreateInvoice)=:m');
+            $qr->setParameter('m',$objParam->getMonthCreate());
+
+            $qr->andWhere('YEAR(ErpnOut.dateCreateInvoice)=:y');
+            $qr->setParameter('y', $objParam->getYearCreate());
         }
 
         if ($objParam->getINN()!=0){
-            $qr->andWhere('ErpnIn.innClient=:i');
+            $qr->andWhere('ErpnOut.innClient=:i');
             $qr->setParameter('i', $objParam->getINN());
         }
 
         if ($objParam->getNumDoc()!=0){
-            $qr->andWhere('ErpnIn.numInvoice=:ni');
+            $qr->andWhere('ErpnOut.numInvoice=:ni');
             $qr->setParameter('ni', $objParam->getNumDoc());
         }
 

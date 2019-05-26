@@ -12,8 +12,7 @@ use App\Entity\ErpnIn;
 use App\Entity\ErpnOut;
 use App\Entity\forForm\search\docFromParam;
 use App\Services\searchDataFromParam\searchErpnFromParam;
-use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Connection;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class searchErpnFromParamTest extends KernelTestCase
@@ -58,6 +57,31 @@ class searchErpnFromParamTest extends KernelTestCase
         $this->clearDB();
     }
 
+    /**
+     * загрузка тестовых данных
+     */
+    private function loadData(){
+        $fileNameIn  = __DIR__."//Fixtures//template_CSV_In(03_2017do_zagruzka).csv";
+        $this->em->getRepository(ErpnIn::class)->loadDataInFile($fileNameIn);
+
+        $fileNameOut  = __DIR__."//Fixtures//template_CSV_Out(03_2017do_zagruzka).csv";
+        $this->em->getRepository(ErpnOut::class)->loadDataInFile($fileNameOut);
+    }
+
+    /**
+     * удаление тестовых данных из базы данных
+     */
+    private function clearDB(){
+        $SQLDeleteRecIn = "DELETE  FROM erpn_in";
+        /** @var Connection $smtpDeleteRecIn */
+        $smtpDeleteRecIn = $this->em->getConnection()->prepare($SQLDeleteRecIn);
+        $smtpDeleteRecIn->execute();
+
+        $SQLDeleteRecOut = "DELETE  FROM erpn_out";
+        $smtpDeleteRecOut = $this->em->getConnection()->prepare($SQLDeleteRecOut);
+        $smtpDeleteRecOut->execute();
+    }
+
 
     /**
      * инициализация типовых параметров
@@ -91,40 +115,12 @@ class searchErpnFromParamTest extends KernelTestCase
         $this->assertEquals("Период поиска документа и дата создания документа должны совпадать !",$res2["dateCreateDoc"]);
     }
 
-    /**
-     * загрузка тестовых данных
-     * @throws \App\Utilits\loadDataExcel\Exception\errorLoadDataException
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    private function loadData(){
-        $fileNameIn  = __DIR__."//Fixtures//template_CSV_In(03_2017do_zagruzka).csv";
-        $this->em->getRepository(ErpnIn::class)->loadDataInFile($fileNameIn);
-
-        $fileNameOut  = __DIR__."//Fixtures//template_CSV_Out(03_2017do_zagruzka).csv";
-        $this->em->getRepository(ErpnOut::class)->loadDataInFile($fileNameOut);
-    }
-
-    /**
-     * удаление тестовых данных из базы данных
-     */
-    private function clearDB(){
-        $SQLDeleteRecIn = "DELETE  FROM erpn_in";
-        $smtpDeleteRecIn = $this->em->getConnection()->prepare($SQLDeleteRecIn);
-        $smtpDeleteRecIn->execute();
-
-        $SQLDeleteRecOut = "DELETE  FROM erpn_out";
-        $smtpDeleteRecOut = $this->em->getConnection()->prepare($SQLDeleteRecOut);
-        $smtpDeleteRecOut->execute();
-    }
 
     /**
      * Тестирование приватного метода getArraySearchData -  полученния данных поиска в виде массива значений
-     * @throws \App\Utilits\loadDataExcel\Exception\errorLoadDataException
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \ReflectionException
      */
     public function test_getArraySearchData(){
-        $this->loadData();
 
         $class = new \ReflectionClass(searchErpnFromParam::class);
             $method = $class->getMethod('getArraySearchData');
@@ -163,7 +159,7 @@ class searchErpnFromParamTest extends KernelTestCase
                     $this->assertEquals(23378.79,$resIn[0]["Pdvinvoice"]);
                     $this->assertEquals("ПУБЛІЧНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"УКРАЇНСЬКА ЗАЛІЗНИЦЯ\" РЕГІОНАЛЬНА ФІЛІЯ \"ДОНЕЦЬКА ЗАЛІЗНИЦЯ\" СТРУКТУРНИЙ ПІДРОЗДІЛ \"ДОНЕЦЬКИЙ ГОЛОВНИЙ МАТЕРІАЛЬНО-ТЕХНІЧНИЙ СКЛАД\"",$resIn[0]["NameVendor"]);
                     $this->assertEquals("779",$resIn[0]["NumBranchVendor"]);
-        $this->clearDB();
+
     }
 
     /**
@@ -171,11 +167,7 @@ class searchErpnFromParamTest extends KernelTestCase
      * тестирование ошибок валидации данных - про наличии ошибок поиск проиходит не должен
      */
     public function test_search_ErrorValidation(){
-        try {
-            $this->loadData();
-        } catch (errorLoadDataException $e) {
-        } catch (DBALException $e) {
-        }
+
         $this->initParam();
     $obj = new searchErpnFromParam($this->em);
     // проверка на ошибки валидации
@@ -203,40 +195,192 @@ class searchErpnFromParamTest extends KernelTestCase
                         $this->assertArrayHasKey("error",$resultSearch);
                         // не должно быть
                         $this->assertArrayNotHasKey("searchData",$resultSearch);
-        $this->clearDB();
+
     }
-    public function test_search_DataSearch(){
-        try {
-            $this->loadData();
-        } catch (errorLoadDataException $e) {
-        } catch (DBALException $e) {
-        }
+
+    /**
+     * тестирование получения данных при произвольных запросах из таблицы ErpnOut
+     * получить все документы из базы
+     */
+    public function test_search_DataSearchToErpnOut_AllDoc(){
+
         $this->initParam();
-            $obj = new searchErpnFromParam($this->em);
-            // проверка на ошибки валидации
-            // в обязательствах
-                $this->param->setRouteSearch("Обязательства");
+        $obj = new searchErpnFromParam($this->em);
+        // проверка на ошибки валидации
+        // в обязательствах
+        // Получим все ПНЕ из базы (плохой запрос)
+        $this->param->setRouteSearch("Обязательства");
+            $this->param->setTypeDoc("ПНЕ");
+            $obj->setParamSearch($this->param);
+                $resultSearch =  $obj->search();
+                    $this->assertNotEmpty($resultSearch);
+                        $this->assertArrayHasKey("searchData",$resultSearch);
+                        $this->assertArrayNotHasKey("error",$resultSearch);
+                    $this->assertEquals(5,count($resultSearch["searchData"]));
+                $this->assertEquals(10,count($resultSearch["searchData"][0]));
+
+           }
+    /**
+     * тестирование получения данных при произвольных запросах из таблицы ErpnOut
+     * Получим все ПНЕ из базы с ИПН 203387405140
+     */
+    public function test_search_DataSearchToErpnOut_INN(){
+
+        $this->initParam();
+        $obj = new searchErpnFromParam($this->em);
+        // проверка на ошибки валидации
+        // в обязательствах
+       // Получим все ПНЕ из базы с ИПН 203387405140
+        $this->param->setRouteSearch("Обязательства");
+        $this->param->setINN("203387405140");
+        $this->param->getTypeDoc("ПНЕ");
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(2,count($resultSearch["searchData"]));
+        $this->assertEquals(10,count($resultSearch["searchData"][0]));
+    }
+
+    /**
+     * тестирование получения данных при произвольных запросах из таблицы ErpnOut
+     * Получим все РКЕ из базы датой создания 31.03.2017
+     */
+    public function test_search_DataSearchToErpnOut_DateCreate_RKE()
+    {
+        $this->initParam();
+        $obj = new searchErpnFromParam($this->em);
+        // Получим все РКЕ из базы датой создания 31.03.2017
+        $this->param->setRouteSearch("Обязательства");
+        $this->param->setDateCreateDoc(new \DateTime("31.03.2017"));
+                $this->param->setTypeDoc("РКЕ");
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(7,count($resultSearch["searchData"]));
+
+
+    }
+
+    /**
+     * тестирование получения данных при произвольных запросах из таблицы ErpnOut
+     * Получим все ПНЕ из базы с номером документа 1//571
+     */
+    public function test_search_DataSearchToErpnOut_numDoc()
+    {
+        $this->initParam();
+        $obj = new searchErpnFromParam($this->em);
+        $this->param->setRouteSearch("Обязательства");
+        $this->param->setNumDoc("1//571");
+        $this->param->setTypeDoc("ПНЕ");
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(1,count($resultSearch["searchData"]));
+        unset($resultSearch);
+
+    }
+
+    /**
+     * тестирование получения данных при произвольных запросах в таблице ErpnIn
+     * Получить все документы из базы
+     */
+    public function test_search_DataSearchToErpnIn_AllDoc(){
+
+        $this->initParam();
+        $obj = new searchErpnFromParam($this->em);
+               $this->param->setRouteSearch("Кредит");
                     $this->param->setTypeDoc("ПНЕ");
                         $obj->setParamSearch($this->param);
                             $resultSearch =  $obj->search();
-        $this->assertNotEmpty($resultSearch);
-                $this->assertArrayHasKey("searchData",$resultSearch);
-                    $this->assertArrayNotHasKey("error",$resultSearch);
-                        $this->assertEquals(5,count($resultSearch["searchData"]));
-                            $this->assertEquals(10,count($resultSearch["searchData"][0]));
-        unset($resultSearch);
-        // в кредите
-        $this->param->setRouteSearch("Кредит");
-            $this->param->setTypeDoc("ПНЕ");
-                $obj->setParamSearch($this->param);
-                    $resultSearch =  $obj->search();
-                    $this->assertNotEmpty($resultSearch);
-                $this->assertArrayHasKey("searchData",$resultSearch);
-                     $this->assertArrayNotHasKey("error",$resultSearch);
-                        $this->assertEquals(49,count($resultSearch["searchData"]));
-                            $this->assertEquals(10,count($resultSearch["searchData"][0]));
-
-
-        $this->clearDB();
+                                $this->assertNotEmpty($resultSearch);
+                                    $this->assertArrayHasKey("searchData",$resultSearch);
+                                        $this->assertArrayNotHasKey("error",$resultSearch);
+                                $this->assertEquals(49,count($resultSearch["searchData"]));
+                        $this->assertEquals(10,count($resultSearch["searchData"][0]));
     }
+
+    /**
+     * тестирование получения данных при произвольных запросах в таблице ErpnIn
+     * Получить все документы из базы по номеру документа
+     */
+    public function test_search_DataSearchToErpnIn_numDoc(){
+
+        $this->initParam();
+        $obj = new searchErpnFromParam($this->em);
+        $this->param->setRouteSearch("Кредит");
+        $this->param->setNumDoc("1");
+        $this->param->setTypeDoc("ПНЕ");
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(2,count($resultSearch["searchData"]));
+        $this->assertEquals(10,count($resultSearch["searchData"][0]));
+        unset($resultSearch,$this->param);
+            $this->initParam();
+            $obj = new searchErpnFromParam($this->em);
+            $this->param->setRouteSearch("Кредит");
+            $this->param->setNumDoc("1");
+            $this->param->setTypeDoc("РКЕ");
+            $obj->setParamSearch($this->param);
+            $resultSearch =  $obj->search();
+            $this->assertNotEmpty($resultSearch);
+            $this->assertArrayHasKey("searchData",$resultSearch);
+            $this->assertArrayNotHasKey("error",$resultSearch);
+            $this->assertEquals(2,count($resultSearch["searchData"]));
+            $this->assertEquals(10,count($resultSearch["searchData"][0]));
+    }
+
+    /**
+     * тестирование получения данных при произвольных запросах из таблицы ErpnOut
+     * Получим все ПНЕ из базы с ИПН 331188920305
+     */
+    public function test_search_DataSearchToErpnIn_INN(){
+
+        $this->initParam();
+        $obj = new searchErpnFromParam($this->em);
+        // проверка на ошибки валидации
+        // в обязательствах
+        // Получим все ПНЕ из базы с ИПН 203387405140
+        $this->param->setRouteSearch("Кредит");
+        $this->param->setINN("331188920305");
+        $this->param->setTypeDoc("ПНЕ");
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(2,count($resultSearch["searchData"]));
+        $this->assertEquals(10,count($resultSearch["searchData"][0]));
+    }
+
+    /**
+     * тестирование получения данных при произвольных запросах из таблицы ErpnOut
+     * Получим все ПНЕ из базы с датой создания 31.03.2017
+     */
+    public function test_search_DataSearchToErpnIn_DateCreate(){
+
+        $this->initParam();
+        $obj = new searchErpnFromParam($this->em);
+        // проверка на ошибки валидации
+        // в обязательствах
+       $this->param->setRouteSearch("Кредит");
+        $this->param->setDateCreateDoc(new \DateTime("31.03.2017"));
+        $this->param->setTypeDoc("ПНЕ");
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(12,count($resultSearch["searchData"]));
+        $this->assertEquals(10,count($resultSearch["searchData"][0]));
+    }
+
 }

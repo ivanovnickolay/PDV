@@ -275,6 +275,7 @@ class docFromParam extends searchAbstract
 	}
 
     /**
+     * Проверка номера документа на валидность
      * @return bool
      */
     private function isValidNumDoc(){

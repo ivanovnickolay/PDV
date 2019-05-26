@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Utilits\loadDataExcel\downloadFromFile;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
+use App\Utilits\workToFileSystem\workWithFiles;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -27,7 +28,7 @@ class LoadReestrFromFileTest extends KernelTestCase
     private $entityManager;
 
 
-    public function setUp(){
+    public function setUp():void {
 
         $kernel = self::bootKernel();
 
@@ -35,6 +36,7 @@ class LoadReestrFromFileTest extends KernelTestCase
             ->get('doctrine')
             ->getManager();
     }
+
 
     public function test_createObject(){
         $obj = new LoadReestrFromFile($this->entityManager);
@@ -85,6 +87,7 @@ class LoadReestrFromFileTest extends KernelTestCase
      * @throws errorLoadDataException
      */
     public function test_createObject_WithDir(){
+
         //$kernel = self::bootKernel();
         $obj = new LoadReestrFromFile($this->entityManager);
     /**
@@ -105,7 +108,7 @@ class LoadReestrFromFileTest extends KernelTestCase
 
         $obj->setDirForMoveFilesWithError(
             __DIR__.'\\dirForMoveFilesWithError');
-        $obj->execute();
+       // $obj->execute();
         $this->assertInstanceOf(LoadReestrFromFile::class,$obj);
 
     }

@@ -1,0 +1,51 @@
+Изменения, которые надо внести в файлы дял корректной работы
+/****************************
+my.ini
+/****************************
+
+для возможности загрузки данных чеерз load data infile
+
+[mysql]
+local-infile=1
+
+[mysqld]
+local-infile=1
+
+для возможости загрузки БОЛЬШИХ дампов данных в базу
+
+# Параметры для загрузки ОГРОМНЫХ дампов базы в новую базу
+# Дампы по примерно 400 Мб загружаются без проблем
+
+innodb_lock_wait_timeout = 200
+connect_timeout = 30
+net_read_timeout = 600
+net_write_timeout = 600
+interactive_timeout = 28800
+net_buffer_length = 16384
+wait_timeout = 28800
+innodb_log_buffer_size = 16777216
+
+# Параметр восстановления базы после сбоев
+#innodb_force_recovery = 4
+
+/****************************
+php.ini
+/****************************
+
+; Для борьбы с ошибкой
+;OutOfMemoryException->__construct($message = 'Error: Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes)
+; снимаю лимит использования памяти
+memory_limit = -1
+; Увеличу лимит кеша
+realpath_cache_size=2048k
+realpath_cache_ttl=600
+
+/****************************
+Тестирование
+/****************************
+
+Для тестирования надо
+ - создать базу данных с названием AnalizPDV_test (AnalizPDV_test 20190515 1559.sql)
+ - настроить подключение к этой базе в phpunit.xml.dist
+ - загрузить дампм таблицы sprbranch (analizpdv_sprbranch.sql)
+ - приемочное тестирование проводится при помощи chromedriver.exe с параметрами запуска (chromedriver.exe --url-base=/wd/hub)

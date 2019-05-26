@@ -17,10 +17,12 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
-    .addEntry('app', './assets/js/app.js')
-    .addEntry('search', './assets/js/handlerForm/searchFormERPN')
+   // .addEntry('app', './assets/js/app.js')
+    //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
-
+    .addEntry('app', './assets/js/app.js')
+    .addEntry('searchERPN', './assets/js/handlerForm/searchFormERPN')
+    .addEntry('searchReestr', './assets/js/handlerForm/searchFormReestr')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
@@ -41,11 +43,21 @@ Encore
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
+    // enables @babel/preset-env polyfills
+    .configureBabel(() => {}, {
+        useBuiltIns: 'usage',
+        corejs: 3
+    })
+
     // enables Sass/SCSS support
     //.enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
+
+    // uncomment to get integrity="..." attributes on your script & link tags
+    // requires WebpackEncoreBundle 1.4 or higher
+    //.enableIntegrityHashes()
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()

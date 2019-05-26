@@ -36,7 +36,7 @@ class loadDataInFile_ERPNTest extends KernelTestCase
     /**
      * @throws \Exception
      */
-    public function setUp(){
+    public function setUp():void {
         $kernel = self::bootKernel();
 
         $this->em = $kernel->getContainer()

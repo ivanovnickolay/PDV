@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class searchErpnInTest extends KernelTestCase
 {
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager|object
+     * @var \Doctrine\Common\Persistence\ObjecttearDownManager|object
      */
     private $em;
     /**
@@ -59,7 +59,7 @@ class searchErpnInTest extends KernelTestCase
      * @throws \App\Utilits\loadDataExcel\Exception\errorLoadDataException
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function setUp(){
+    public function setUp():void {
         $this->loadData();
     }
     /**
@@ -152,7 +152,7 @@ class searchErpnInTest extends KernelTestCase
         unset($this->param);
     }
 
-    public function tearDown(){
+    public function tearDown():void {
         $this->clearDB();
     }
 

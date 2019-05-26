@@ -29,7 +29,7 @@ class LoadDataToErpnInCommandTest extends KernelTestCase
     private $dirForFilesERPN_Out;
     private $dirForFilesERPN_In;
 
-    public function setUp()
+    public function setUp():void
     {
         // получаем Entity Manager
         $kernel = self::bootKernel();

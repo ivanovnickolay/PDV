@@ -84,6 +84,36 @@ class searchReestrFromParamTest  extends KernelTestCase
         } catch (\Exception $e) {
 }
     }
+
+    /**
+     * загрузка тестовых данных с помощи LoadReestrFromFile
+     * несколько не(!) больших файлов с данными РПН (отдельно НО и отдельно НК) и загружать их при помощи LoadReestrFromFile
+     * @see LoadReestrFromFile
+     * @throws \App\Utilits\loadDataExcel\Exception\errorLoadDataException
+     */
+    private function loadData(){
+
+        $loader = new LoadReestrFromFile($this->em);
+        $loader->setDirForLoadFiles(__DIR__."/Fixtures/Reestr/dirForLoadFiles");
+        $loader->setDirForMoveFiles(__DIR__."/Fixtures/Reestr/dirForMoveFiles");
+        $loader->setDirForMoveFilesWithError(__DIR__."/Fixtures/Reestr/dirForMoveFilesWithError");
+        $loader->execute();
+    }
+
+    /**
+     * удаление тестовых данных из базы данных
+     */
+    private function clearDB(){
+        $SQLDeleteRecIn = "DELETE  FROM reestrbranch_in";
+
+        $smtpDeleteRecIn = $this->em->getConnection()->prepare($SQLDeleteRecIn);
+        $smtpDeleteRecIn->execute();
+
+        $SQLDeleteRecOut = "DELETE  FROM reestrbranch_out";
+        $smtpDeleteRecOut = $this->em->getConnection()->prepare($SQLDeleteRecOut);
+        $smtpDeleteRecOut->execute();
+    }
+
     /**
      * инициализация типовых параметров
      */
@@ -96,7 +126,7 @@ class searchReestrFromParamTest  extends KernelTestCase
     /**
      * проверим данные, которые загружены в базу данных путем контроля количества записей
      */
-    public function test_DataWithDatabase(){
+    public function test_ControlDataWithDatabase(){
 
         // контроль общего количества записей
            $countRecToIn=$this->em->getRepository(ReestrbranchIn::class)->count([]);
@@ -121,6 +151,7 @@ class searchReestrFromParamTest  extends KernelTestCase
                             $this->assertEquals(18,$countRecToOut_numBranch);
 
     }
+
     /**
      * проверка приватного метода validParamSearch - организация поиска данных в базе
      * @throws \ReflectionException
@@ -142,35 +173,6 @@ class searchReestrFromParamTest  extends KernelTestCase
         $res2 = $method->invoke($obj);
         $this->assertEquals(2,count($res2));
         $this->assertEquals("Период поиска документа и дата создания документа должны совпадать !",$res2["dateCreateDoc"]);
-    }
-
-    /**
-     * загрузка тестовых данных с помощи LoadReestrFromFile
-     * несколько не(!) больших файлов с данными РПН (отдельно НО и отдельно НК) и загружать их при помощи LoadReestrFromFile
-     * @see LoadReestrFromFile
-     * @throws \App\Utilits\loadDataExcel\Exception\errorLoadDataException
-     */
-    private function loadData(){
-
-        $loader = new LoadReestrFromFile($this->em);
-            $loader->setDirForLoadFiles(__DIR__."/Fixtures/Reestr/dirForLoadFiles");
-                $loader->setDirForMoveFiles(__DIR__."/Fixtures/Reestr/dirForMoveFiles");
-                    $loader->setDirForMoveFilesWithError(__DIR__."/Fixtures/Reestr/dirForMoveFilesWithError");
-                $loader->execute();
-    }
-
-    /**
-     * удаление тестовых данных из базы данных
-     */
-    private function clearDB(){
-        $SQLDeleteRecIn = "DELETE  FROM reestrbranch_in";
-
-        $smtpDeleteRecIn = $this->em->getConnection()->prepare($SQLDeleteRecIn);
-        $smtpDeleteRecIn->execute();
-
-        $SQLDeleteRecOut = "DELETE  FROM reestrbranch_out";
-        $smtpDeleteRecOut = $this->em->getConnection()->prepare($SQLDeleteRecOut);
-        $smtpDeleteRecOut->execute();
     }
 
     /**
@@ -201,22 +203,6 @@ class searchReestrFromParamTest  extends KernelTestCase
         $this->assertEquals(1237.94,$resIn[0]["Pdvinvoice"]);
         //$this->assertEquals("Публічне акціонерне товариство \"по газопостачанню та газифікації \"Черкасигаз\"",$resIn[0]["NameVendor"]);
         $this->assertEquals("611",$resIn[0]["NumBranchReestr"]);
-
-//        $this->param->setRouteSearch("Кредит");
-////        $resIn = $method->invoke($obj);
-////        $this->assertEquals(49,count($resIn));
-////        $this->assertEquals(10,count($resIn[0]));
-////        $this->assertEquals("1",$resIn[0]["NumInvoice"]);
-////        $this->assertEquals(new \DateTime("2017-03-23 00:00:00.000000"),$resIn[0]["DateCreateInvoice"]);
-////        $this->assertEquals("ПНЕ",$resIn[0]["TypeInvoiceFull"]);
-////        $this->assertEquals("345012604630",$resIn[0]["InnClient"]);
-////        $this->assertEquals("ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"КОМПАНІЯ ПРОМІНСТРУМЕНТ\"",$resIn[0]["NameClient"]);
-////        $this->assertEquals(140272.74,$resIn[0]["SumaInvoice"]);
-////        $this->assertEquals(116893.95,$resIn[0]["BazaInvoice"]);
-////        $this->assertEquals(23378.79,$resIn[0]["Pdvinvoice"]);
-////        $this->assertEquals("ПУБЛІЧНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"УКРАЇНСЬКА ЗАЛІЗНИЦЯ\" РЕГІОНАЛЬНА ФІЛІЯ \"ДОНЕЦЬКА ЗАЛІЗНИЦЯ\" СТРУКТУРНИЙ ПІДРОЗДІЛ \"ДОНЕЦЬКИЙ ГОЛОВНИЙ МАТЕРІАЛЬНО-ТЕХНІЧНИЙ СКЛАД\"",$resIn[0]["NameVendor"]);
-////        $this->assertEquals("779",$resIn[0]["NumBranchVendor"]);
-
     }
 
     /**
@@ -295,6 +281,103 @@ class searchReestrFromParamTest  extends KernelTestCase
         $this->assertArrayHasKey("error",$resultSearch);
         // не должно быть
         $this->assertArrayNotHasKey("searchData",$resultSearch);
+
+    }
+
+    /**
+     * Тест получения информации по коду ИПН в периоде
+     */
+
+    public function test_searchDataToReestrOut_INN(){
+        $this->initParam();
+        $this->param->setINN("352449120316"); ///002110021058
+        $this->param->setRouteSearch("Обязательства");
+        $obj=new searchReestrFromParam($this->em);
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(2,count($resultSearch["searchData"]));
+        $this->assertEquals(9,count($resultSearch["searchData"][0]));
+
+        unset($resultSearch);
+
+        $this->initParam();
+        $this->param->setINN("002110021058");
+        $obj=new searchReestrFromParam($this->em);
+        $this->param->setRouteSearch("Обязательства");
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(9,count($resultSearch["searchData"]));
+    }
+
+    /**
+     * тестирование посика документов по ИНН и типу документа
+     */
+
+    public function test_test_searchDataToReestrOut_INN_typeDoc(){
+        $this->initParam();
+        $this->param->setINN("400000000000");
+        $this->param->setTypeDoc("ПНЕ");
+        $this->param->setRouteSearch("Обязательства");
+        $obj=new searchReestrFromParam($this->em);
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(1,count($resultSearch["searchData"]));
+
+        unset($resultSearch,$obj);
+
+        $this->initParam();
+        $this->param->setINN("400000000000");
+        $this->param->setRouteSearch("Обязательства");
+        $this->param->setTypeDoc("РКЕ");
+        $obj=new searchReestrFromParam($this->em);
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(2,count($resultSearch["searchData"]));
+
+    }
+    /**
+     *
+     */
+    public function test_searchDataToReestrOut_dateCreate(){
+        $this->initParam();
+        $this->param->setDateCreateDoc(new \DateTime("13.12.2016"));
+        $this->param->setTypeDoc("ПНЕ");
+        $this->param->setRouteSearch("Обязательства");
+        $obj=new searchReestrFromParam($this->em);
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(4,count($resultSearch["searchData"]));
+
+        unset($resultSearch,$obj);
+
+        $this->initParam();
+        $this->param->setDateCreateDoc(new \DateTime("31.12.2016"));
+        $this->param->setTypeDoc("РКЕ");
+        $this->param->setRouteSearch("Обязательства");
+        $obj=new searchReestrFromParam($this->em);
+        $obj->setParamSearch($this->param);
+        $resultSearch =  $obj->search();
+        $this->assertNotEmpty($resultSearch);
+        $this->assertArrayHasKey("searchData",$resultSearch);
+        $this->assertArrayNotHasKey("error",$resultSearch);
+        $this->assertEquals(12,count($resultSearch["searchData"]));
+
+
 
     }
 }

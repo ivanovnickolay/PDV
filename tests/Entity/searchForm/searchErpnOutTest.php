@@ -60,7 +60,7 @@ class searchErpnOutTest extends KernelTestCase
      * @throws \App\Utilits\loadDataExcel\Exception\errorLoadDataException
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function setUp(){
+    public function setUp():void{
         $this->loadData();
     }
     /**
@@ -153,7 +153,7 @@ class searchErpnOutTest extends KernelTestCase
         unset($this->param);
     }
 
-    public function tearDown(){
+    public function tearDown():void {
         $this->clearDB();
     }
 }

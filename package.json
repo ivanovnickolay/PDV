@@ -1,6 +1,6 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.22.0",
+        "@symfony/webpack-encore": "^0.27.0",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
@@ -12,9 +12,18 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "bootstrap": "^4.3.1",
         "chai": "^4.2.0",
-        "jquery": "^3.3.1",
-        "mocha": "^6.0.2",
+        "core-js": "^3.1.2",
+        "datatables.net": "^1.10.19",
+        "datatables.net-buttons": "latest",
+        "datatables.net-buttons-dt": "^1.5.6",
+        "datatables.net-dt": "^1.10.19",
+        "datatables.net-fixedcolumns-dt": "^3.2.6",
+        "datatables.net-fixedheader-dt": "^3.1.5",
+        "jquery": "^3.4.1",
+        "mocha": "^6.1.4",
+        "popper.js": "^1.15.0",
         "zombie": "^6.1.4"
     }
 }

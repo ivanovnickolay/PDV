@@ -23,7 +23,7 @@ class LoadReestrFromFileReestrOutValidDataTest extends TestCase
 {
     private $objectManager;
 
-    public function setUp(){
+    public function setUp():void {
         $mapIn = array(
             array(
                 ["month" => 7, "year" => 2016, "numBranch" => "578"],

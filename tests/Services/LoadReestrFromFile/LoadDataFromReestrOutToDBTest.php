@@ -30,7 +30,7 @@ class LoadDataFromReestrOutToDBTest extends KernelTestCase
     /**
      * @throws \Exception если база не тестовая AnalizPDV_test
      */
-    public function setUp(){
+    public function setUp():void {
 
         // получаем Entity Manager
         $kernel = self::bootKernel();

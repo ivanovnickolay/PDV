@@ -6,6 +6,7 @@ use App\Entity\forForm\search\docFromParam;
 use App\Entity\forForm\search\getArrayFromSearch_Interface;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 use App\Utilits\workToFileSystem\workWithFiles;
+use PDO;
 
 
 /**
@@ -16,18 +17,19 @@ use App\Utilits\workToFileSystem\workWithFiles;
  */
 class ErpnInRepository extends \Doctrine\ORM\EntityRepository
 {
-	/**
-	 * поиск данных в ЕРПН по условиям из класса getSearchAllFromPeriod_Branch
-	 *
-	 * @uses allFromPeriod_Branch класс поиска
-	 * @uses allFromPeriod_Branch::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
-	 *
-	 * использованные расширения
-	 * @link  https://simukti.net/blog/2012/04/05/how-to-select-year-month-day-in-doctrine2/
-	 * @link  https://github.com/beberlei/DoctrineExtensions
-	 *
-	 * @param getArrayFromSearch_Interface $arrayFromSearch
-	 */
+    /**
+     * поиск данных в ЕРПН по условиям из класса getSearchAllFromPeriod_Branch
+     *
+     * @uses allFromPeriod_Branch класс поиска
+     * @uses allFromPeriod_Branch::getArrayFromSearchErpn возвращает данные для $arrayFromSearch
+     *
+     * использованные расширения
+     * @link  https://simukti.net/blog/2012/04/05/how-to-select-year-month-day-in-doctrine2/
+     * @link  https://github.com/beberlei/DoctrineExtensions
+     *
+     * @param getArrayFromSearch_Interface $arrayFromSearch
+     * @return mixed
+     */
 	public function getSearchAllFromPeriod_Branch($arrayFromSearch)
 	{
 		$emConfig = $this->getEntityManager()->getConfiguration();
@@ -124,18 +126,19 @@ class ErpnInRepository extends \Doctrine\ORM\EntityRepository
                     date_create_invoice= IF(@date_create_invoice='', NULL, STR_TO_DATE(@date_create_invoice, '%d.%m.%Y')),
                     date_reg_invoice= IF(@date_reg_invoice='', NULL, STR_TO_DATE(@date_reg_invoice, '%d.%m.%Y'))
                     ;
-                    ALTER TABLE `Erpn_in` COLLATE='utf8_general_ci'; ";
+                     ";
+        //ALTER TABLE `Erpn_in` COLLATE='utf8_general_ci';
         // Костыль для "разблокировки" возможности загрузки файлов
         // суть "костыля" - в создании абсолютно нового подключения к базе c ключем \PDO::MYSQL_ATTR_LOCAL_INFILE => true
         // https://stackoverflow.com/questions/18328594/an-exception-occurred-while-executing-load-data-local-infile?noredirect=1&lq=1
         $params  = $this->_em->getConnection()->getParams();
-        $pdoConn = new \PDO('mysql:host=' .  $params['host'] . ';dbname=' . $params['dbname'], $params['user'], $params['password'], array(
-            \PDO::MYSQL_ATTR_LOCAL_INFILE => true
-        ));
+        $pdoConn = new PDO('mysql:host=' .  $params['host'] . ';dbname=' . $params['dbname'], $params['user'], $params['password'],
+            array(PDO::MYSQL_ATTR_LOCAL_INFILE => true));
+//        $smtp=$this->_em->getConnection()->prepare($testSQL);
         $smtp=$pdoConn->prepare($testSQL);
         $smtp ->bindValue("fileName",$fileName);
         $smtp->execute();
-        unset($pdoConn,$smtp);
+        unset($smtp);
     }
 
     /** Поиск данных в таблице на основании параметров переданных в объекте docFromParam
@@ -148,19 +151,18 @@ class ErpnInRepository extends \Doctrine\ORM\EntityRepository
 //        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
 //        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
         $qr=$this->createQueryBuilder('ErpnIn');
-
-        $qr->where('MONTH(ErpnIn.dateCreateInvoice)=:m');
-        $qr->setParameter('m',$objParam->getMonthCreate());
-
-            $qr->andWhere('YEAR(ErpnIn.dateCreateInvoice)=:y');
-            $qr->setParameter('y', $objParam->getYearCreate());
-
-                $qr->andWhere('ErpnIn.typeInvoiceFull=:t');
+                $qr->Where('ErpnIn.typeInvoiceFull=:t');
                 $qr->setParameter('t', $objParam->getTypeDoc());
 
                     if ($objParam->getDateCreateDoc()!=null){
                         $qr->andWhere('ErpnIn.dateCreateInvoice=:d');
                         $qr->setParameter('d', $objParam->getDateCreateDoc());
+                    } else {
+                        $qr->andWhere('MONTH(ErpnIn.dateCreateInvoice)=:m');
+                        $qr->setParameter('m',$objParam->getMonthCreate());
+
+                        $qr->andWhere('YEAR(ErpnIn.dateCreateInvoice)=:y');
+                        $qr->setParameter('y', $objParam->getYearCreate());
                     }
 
                     if ($objParam->getINN()!=0){

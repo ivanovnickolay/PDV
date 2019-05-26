@@ -44,7 +44,7 @@ class LoadReestrFromLargeFilesTest extends KernelTestCase
     /**
      * @throws \Exception если база не тестовая AnalizPDV_test
      */
-    public function setUp(){
+    public function setUp():void {
 
         // получаем Entity Manager
         $kernel = self::bootKernel();
@@ -70,7 +70,7 @@ class LoadReestrFromLargeFilesTest extends KernelTestCase
     /*
         * @throws \Doctrine\DBAL\DBALException
         */
-    public function tearDown(){
+    public function tearDown():void {
         // удаляем загруженное из базы
         try {
             $this->deleteAllFromReestrIn();

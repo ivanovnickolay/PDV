@@ -21,14 +21,14 @@
             {{ form_widget(form) }}
             {{ form_end(form) }}
             {{ encore_entry_script_tags('app') }}
-            {{ encore_entry_script_tags('search') }}
+            {{ encore_entry_script_tags('searchReestr') }}
     </div>
     <div class="col-md-8">
                     <div class = "table">
                         <b>Результат поиска данных </b>
-                        <table class="table table-bordered table-sm" >
+                        <table id="table_ajax" class="table table-bordered table-sm" >
                             <thead class=".thead-light">
-                                <tr>
+
                                     <th>Номер документа</th>
                                     <th>Дата создания документа</th>
                                     <th>Тип документа</th>
@@ -37,9 +37,9 @@
                                     <th>Сумма с ПДВ, грн</th>
                                     <th>База, грн</th>
                                     <th>ПДВ, грн</th>
-                                    <th>Наименование поставщика</th>
-                                    <th>Номер филиала поставщика</th>
-                                </tr>
+                                    {#<th>Наименование поставщика</th>#}
+                                    {#<th>Номер филиала поставщика</th>#}
+
                             </thead>
                             <tbody class="ajaxResult">
 
