@@ -13,15 +13,18 @@
             vertical-align: center;
         }
     </style>
+    {{ encore_entry_link_tags('searchReestr') }}
+    {{ encore_entry_script_tags('searchReestr') }}
     {% endblock %}
+
+
 {% block form %}
     <div class="col-md-3">
             <b>Поиск документов в Реестре выданных и полученных документов за период </b>
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
             {{ form_widget(form) }}
             {{ form_end(form) }}
-            {{ encore_entry_script_tags('app') }}
-            {{ encore_entry_script_tags('searchReestr') }}
+
     </div>
     <div class="col-md-8">
                     <div class = "table">

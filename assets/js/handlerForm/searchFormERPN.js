@@ -3,7 +3,7 @@
  *  отправка AJAX запроса
  *  обработка и вывод ответа
  */
-require('datatables.net-dt/css/jquery.dataTables.min.css')
+require('datatables.net-dt/css/jquery.dataTables.min.css');
 require('datatables.net-fixedheader-dt/css/fixedHeader.dataTables.css');
 var validINN = require('../validators/validationINN');
 var validNumDoc = require('../validators/validationNumDoc');
@@ -12,11 +12,9 @@ require( 'datatables.net/js/jquery.dataTables.min' );
 
 // после загрузки DOM настраиваем поля
 function init() {
-
     initRangeDate();
     notSubmitFormFromEnter();
     inputOnlyInteget();
-
 }
 
 /**
@@ -60,7 +58,7 @@ function inputOnlyInteget() {
  */
 function notSubmitFormFromEnter() {
     $(':input').keydown(function (e) {
-        if (e.which == '13') {
+        if (e.which === '13') {
             $('form#search_erpn').submit();
             e.preventDefault();
         }
@@ -87,7 +85,6 @@ function handlerDataForm(event) {
      returnResult = true;
      let INN = new validINN($('#search_erpn_iNN').val());
      if(!INN.validINN()){
-
          $('#search_erpn_iNN').after("<p id='error_inn' style='color: red'> Длина ИНН не верная. ИНН может быть или 10 или 12 символов! </p>");
          returnResult = false;
      }
@@ -108,11 +105,7 @@ function handlerDataForm(event) {
 // централизация назначений всех событий документа
 function addEventToThisDocument() {
     $("#search_erpn_dateCreateDoc").focus(initRangeDate);
-    $("#search_erpn_monthCreate").focusout(initRangeDate);
-    $("#search_erpn_yearCreate").focusout(initRangeDate);
-    //$("#search_erpn_iNN").change(validINN)
-    //$("#search_erpn_dateCreateDoc").click();
-    $("form").submit(function (event){handlerDataForm(event)});
+      $("form").submit(function (event){handlerDataForm(event)});
 }
 
 /**
@@ -158,7 +151,7 @@ $(document).ready( function() {
                 "sortAscending": ": активировать для сортировки столбца по возрастанию",
                 "sortDescending": ": активировать для сортировки столбца по убыванию"
             }
-        }});
+       }});
     addEventToThisDocument();
 });
 
