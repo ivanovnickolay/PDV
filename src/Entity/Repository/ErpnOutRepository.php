@@ -3,8 +3,14 @@
 namespace App\Entity\Repository;
 
 use App\Entity\forForm\search\docFromParam;
+use App\Utilits\Analiz\Exception\noCorrectDataException;
+use App\Utilits\Analiz\Exception\noCorrectRoutingSearchException;
+use App\Utilits\Analiz\prepareSQL\prepareSQLToErpn;
+use App\Utilits\Analiz\workDateForSQL;
 use App\Utilits\loadDataExcel\Exception\errorLoadDataException;
 use App\Utilits\workToFileSystem\workWithFiles;
+use Doctrine\DBAL\DBALException;
+use Exception;
 use PDO;
 
 
@@ -299,5 +305,46 @@ class ErpnOutRepository extends \Doctrine\ORM\EntityRepository
         $result=$qr->getQuery();
         return $result->getResult();
 
+    }
+
+    /**
+     * Получение "сырых" данных для анализа
+     * @param int $month - месяц проведения анализа
+     * @param int $year - год проведения анализа
+     * @return array
+     * @throws noCorrectDataException
+     * @throws noCorrectRoutingSearchException
+     * @throws Exception
+     */
+    public function getArrayRecordsForAnaliz(int $month, int $year){
+        $obj = new workDateForSQL($month,$year);
+        $sql = prepareSQLToErpn::getPrepareSQL(
+            $obj->getMonthAnaliz(),
+            $obj->getYearAnaliz(),
+            'ErpnOut'
+        );
+        return $this->executeSQLWithReturn(
+            $sql,
+            $obj->getArrayForBindValueWithPeriod()
+        );
+    }
+
+    /**
+     * Формирование запроса который возвращает результат своей работы
+     * @param string $SQL текст запроса
+     * @param array $paramBind параметры запросе
+     * @return array
+     * @throws DBALException
+     */
+    private function executeSQLWithReturn(string $SQL, array $paramBind=null):array {
+        $smtp=$this->_em->getConnection()->prepare($SQL);
+        if(!is_null($paramBind)){
+            foreach ($paramBind as $key=>$value){
+                $smtp->bindValue("$key", $value);
+            }
+        }
+        $smtp->execute();
+        $arrayResult=$smtp->fetchAll();
+        return $arrayResult;
     }
 }

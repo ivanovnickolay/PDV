@@ -9,6 +9,7 @@
 namespace App\Utilits\loadDataExcel\cacheDataRow;
 use App\Entity\ReestrbranchIn;
 use App\Entity\ReestrbranchOut;
+use Exception;
 
 
 /**
@@ -33,16 +34,16 @@ class cacheDataRow
      * сериализация и добавление объекта в кеш
      * дабавление возможно только для определенных классов
      * @param $obj
-     * @throws \Exception если передан не объект или передан объект не того типа
+     * @throws Exception если передан не объект или передан объект не того типа
      */
     public function addData($obj){
         if(!is_object($obj)){
-            throw new \Exception("Для добавления в кеш передан не объект");
+            throw new Exception("Для добавления в кеш передан не объект");
         }
         if (!in_array(
             get_class($obj),
             $this->arrayCorrectEntity)){
-            throw new \Exception("Для добавления в кеш передан не верный объект");
+            throw new Exception("Для добавления в кеш передан не верный объект");
         }
 
         $this->arrayCache[]=serialize($obj);

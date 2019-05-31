@@ -4,6 +4,13 @@ namespace App\Entity\Repository;
 
 use App\Entity\forForm\search\docFromParam;
 use App\Services\searchReestrFromParam;
+use App\Utilits\Analiz\Exception\noCorrectDataException;
+use App\Utilits\Analiz\Exception\noCorrectRoutingSearchException;
+use App\Utilits\Analiz\prepareSQL\prepareSQLToReestr;
+use App\Utilits\Analiz\workDateForSQL;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityRepository;
+use Exception;
 
 /**
  * ReestrBranch_out
@@ -15,7 +22,7 @@ use App\Services\searchReestrFromParam;
  * Class ReestrBranch_out
  * @package AnalizPdvBundle\Entity\Repository
  */
-class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
+class ReestrBranch_out extends EntityRepository
 {
 	/**
 	 * поиск данных в Реестре выданых НН по параметрам
@@ -110,7 +117,7 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
      * @param $year string
      * @param $numMainBranch string
      * @return bool
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      * @todo  ПЕРЕПИСАТЬ НА ИСПОЛЬЗОВАНИЕ  count()
      */
 	public function is_NumMainBranchToPeriod($month, $year, $numMainBranch)
@@ -142,7 +149,7 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
      * @param string $numBranch
      * @param string $inn
      * @return array
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
 	public function getAnalizData(int $month, int $year, string $numBranch, string $inn)
 	{
@@ -244,4 +251,43 @@ class ReestrBranch_out extends \Doctrine\ORM\EntityRepository
         $result = $qr->getQuery();
         return $result->getResult();
     }
+
+    /**
+     * Получение "сырых" данных для анализа
+     * @param int $month - месяц проведения анализа
+     * @param int $year - год проведения анализа
+     * @return array
+     * @throws noCorrectDataException
+     * @throws noCorrectRoutingSearchException
+     * @throws Exception
+     */
+    public function getArrayRecordsForAnaliz(int $month, int $year){
+        $obj = new workDateForSQL($month,$year);
+        $sql = prepareSQLToReestr::getPrepareSQL('ReestrOut');
+        return $this->executeSQLWithReturn(
+            $sql,
+            $obj->getArrayForBindValueWithoutPeriod()
+        );
+    }
+
+    /**
+     * Формирование запроса который возвращает результат своей работы
+     * @param string $SQL текст запроса
+     * @param array $paramBind параметры запросе
+     * @return array
+     * @throws DBALException
+     */
+    private function executeSQLWithReturn(string $SQL, array $paramBind=null):array {
+        $smtp=$this->_em->getConnection()->prepare($SQL);
+        if(!is_null($paramBind)){
+            foreach ($paramBind as $key=>$value){
+                $smtp->bindValue("$key", $value);
+            }
+        }
+        $smtp->execute();
+        $arrayResult=$smtp->fetchAll();
+        return $arrayResult;
+    }
+
+
 }

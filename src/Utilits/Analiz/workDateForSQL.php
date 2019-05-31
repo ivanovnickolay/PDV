@@ -317,5 +317,45 @@ class workDateForSQL
         }
     }
 
+    /**
+     *  формирирование массива arrayForBindValueWithPeriod с данными параметров запроса
+     *  которые ЗАВИСЯТ от периода
+     * @throws Exception
+     */
+    public function getArrayForBindValueWithPeriod():array {
+        $arrayForBindValueWithPeriod = array();
+        $arrayForBindValueWithPeriod["m"]=$this->getMonthAnaliz();
+        $arrayForBindValueWithPeriod["y"]=$this->getYearAnaliz();
+
+        $arrayForBindValueWithPeriod["dateBeginRKE"]=$this->getStartPeriodAnalizRke();
+        $arrayForBindValueWithPeriod["dateEndRKE"]=$this->getEndPeriodAnalizRke();
+
+        if(!is_null($this->getMonthMinisOne())and (!is_null($this->getYearMinisOneMonth()))){
+            $arrayForBindValueWithPeriod["m_minusOne"]=$this->getMonthMinisOne();
+            $arrayForBindValueWithPeriod["y_minusOne"]=$this->getYearMinisOneMonth();
+            $arrayForBindValueWithPeriod["dataBegin_minusOne"]=$this->getStartPeriodAnalizRkeMinusOne();
+            $arrayForBindValueWithPeriod["dataEnd_minusOne"]=$this->getEndPeriodAnalizRkeMinusOne();
+        }
+
+        if(!is_null($this->getMonthMinisTwo())and (!is_null($this->getYearMinisTwoMonth()))){
+            $arrayForBindValueWithPeriod["dataBeginCreate_invoice"]=$this->getStartPeriodAnalizRkeMinusTwo();
+            $arrayForBindValueWithPeriod["dataEndCreate_invoice"]=$this->getEndPeriodAnalizRkeMinusTwo();
+            $arrayForBindValueWithPeriod["dataBegin_minusTwo"]=$this->getStartPeriodAnalizRke();
+            $arrayForBindValueWithPeriod["dataEnd_minusTwo"]=$this->getEndPeriodAnalizRkeMinusOne();
+        }
+        return $arrayForBindValueWithPeriod;
+    }
+
+    /**
+     * формирирование массива arrayForBindValueWithoutPeriod с данными параметров запроса
+     *  которые НЕ зависят от периода
+     */
+    public function getArrayForBindValueWithoutPeriod():array {
+        $arrayForBindValueWithoutPeriod = array();
+        $arrayForBindValueWithoutPeriod["m"]=$this->getMonthAnaliz();
+        $arrayForBindValueWithoutPeriod["y"]=$this->getYearAnaliz();
+        return $arrayForBindValueWithoutPeriod;
+    }
+
 
 }
