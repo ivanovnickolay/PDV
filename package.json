@@ -22,7 +22,7 @@
         "datatables.net-fixedcolumns-dt": "^3.2.6",
         "datatables.net-fixedheader-dt": "^3.1.5",
         "jquery": "^3.4.1",
-        "mocha": "^6.1.4",
+        "mocha": "^10.2.0",
         "popper.js": "^1.15.0",
         "zombie": "^6.1.4"
     }
